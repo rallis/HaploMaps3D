@@ -1,0 +1,27 @@
+{"maps":[
+    [
+        1,
+        "Homo sapiens mitochondrial DNA, nearly complete genome, point mutation sites",
+        "AB055387.1",
+        16554,
+        [
+            "AB055387.1",
+            46,
+            "B5b",
+            "B5b1a2"
+        ]
+    ],
+    [
+        2,
+        "Homo sapiens mitochondrial DNA, complete genome, cell_line: MDA-MB-231",
+        "AB626609.1",
+        16573,
+        [
+            "AB626609.1",
+            33,
+            "X2e",
+            "X2e2b"
+        ]
+    ]
+]
+}

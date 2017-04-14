@@ -1,0 +1,502 @@
+
+
+		$.ajax({
+			url: "./extra/maps.txt", 
+			cache: false, 
+			success: function(result){
+			// LOAD FILENAMES OF MAPS 
+			//var result = JSON.parse(result);
+			//console.log(result);
+			var resfetch;
+			if(tmpMap){
+				resfetch=JSON.parse(result)['tmpmaps'];
+			}else{
+				resfetch=JSON.parse(result)['maps'];	
+			}
+			var outcome='';
+			for(i=0;i<resfetch.length;i++){
+				outcome+='<div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#modmap-accordion-'+i+'" href="#modmap-collapse-'+i+'">'+resfetch[i][0]+'&nbsp;&nbsp;<span class="badge">'+resfetch[i][1].length+'</span></a></h4></div>';
+				var tmp='<div id="modmap-collapse-'+i+'" class="panel-collapse collapse out"><div class="panel-body"><ul class="list-group large-group">';
+				for(var j=0; j<resfetch[i][1].length; j++){
+					tmp+='<li class="list-group-item"><a href="#">'+resfetch[i][1][j]+'</a></li>';
+				}
+				tmp+='</ul></div></div>';
+				outcome+=tmp;
+			}
+			$('#listgroupsofmaps').html(outcome);
+
+			// LOAD PREVIEW CONTENT FOR EACH FILENAME
+			$(".list-group-item").click(function() {
+				$("#filecontent").html('<img src="img/loading.gif" width="50" height="50"/>');
+				console.log('Loading = '+$(this).text());
+				mapID=$(this).text();
+				
+				var mapPathToLoad = "";
+				var mapPathToLoadInURL = "";
+				if(tmpMap){
+					mapPathToLoad = "./maps/tmp/"+mapID;
+					mapPathToLoadInURL = "tmp/"+mapID;
+				}else{
+					mapPathToLoad = "./maps/"+mapID;
+					mapPathToLoadInURL = mapID;
+				}
+
+				$.ajax({
+					url: mapPathToLoad, 
+					cache: false,
+					success: function(result){
+						var resfetch=result.split("\n");
+
+						if(resfetch[6].indexOf("#") > -1){
+							// NEW TYPE OF LEGEND WITH INFO SPLIIT BY #
+							console.log("Found legend, split by #");
+							var sublegends = resfetch[6].split("#");
+							var subleg = "<div>&bull; "+sublegends[0]+"</div>";
+							subleg += "<div>&bull; "+sublegends[1]+"</div>";
+							subleg += "<div>&bull; "+sublegends[2]+"</div>";
+							subleg += "<div>&bull; "+sublegends[3]+"</div>";
+							subleg += "<div>&bull; Avg.Seq.Length: "+sublegends[4]+"</div>";
+							
+							$("#filecontent").html('<p id="mapId"><strong>'+resfetch[5]+'</strong></p><p>'+subleg+'</p><a href="load.html?mapid='+mapPathToLoadInURL+'" target="_blank">Show Map</a><p></p>');
+						}else{
+							// BACKWARD COMPATIBILITY LEGEND
+							console.log("BACKWARD COMPATIBILITY LEGEND");
+							$("#filecontent").html('<p id="mapId"><strong>'+resfetch[5]+'</strong></p><p>'+resfetch[6]+'</p><a href="load.html?mapid='+mapPathToLoadInURL+'" target="_blank">Show Map</a><p></p>');
+						}
+
+						
+					}
+				});
+			});
+		}});
+
+		$("#goto1").click(function(){$('#guide-tabs li:eq(1) a').tab('show');});
+		$("#goto2").click(function(){$('#guide-tabs li:eq(2) a').tab('show');});
+		$("#goto3").click(function(){$('#guide-tabs li:eq(3) a').tab('show');});
+		$("#kmerslen").val('9');
+		$("#getTaxa").val('0');
+		
+		// $('#guide-tabs li:eq(2) a').tab('show');
+
+		$("#buildmapmenucontent").slideUp();
+		$("#extendmapmenucontent").slideUp();
+		$("#inputdatamenu").slideUp();
+		$("#computemenu").slideUp();
+		$("#hotkeyslist").slideUp();
+		
+		$("#hotkeysshowhide").click(function(){
+			$("#hotkeyslist").slideToggle();
+		});
+
+		$("#buildmapmenuheader").click(function(){
+			// console.log("build");
+			$("#buildmapmenucontent").slideDown();
+			$("#inputdatamenu").slideDown();
+			$("#extendmapmenucontent").slideUp();
+			$("#computemenu").slideUp();
+			$("#numofsets").val(0);
+			$("#numofsets").trigger("change");
+			// $("#selectnumofsets").css({"border-color": "red", "border-width":"5px", "border-style":"solid"});
+		});
+
+		$("#extendmapmenuheader").click(function(){
+			// console.log("extend");
+			$("#buildmapmenucontent").slideUp();
+			$("#inputdatamenu").slideUp();
+			$("#extendmapmenucontent").slideDown();
+			$("#computemenu").slideUp();
+		});
+
+
+		$("#aid1").click(function(){
+			$("#seq0").empty();
+			$("#seq0").val("NC_012920");
+			$("#seq1").empty();
+			$("#seq1").val("NC_001643");	
+			computeAIDdist();		
+		}); 
+		$("#aid2").click(function(){
+			$("#seq0").empty();
+			$("#seq0").val("NC_012920");
+			$("#seq1").empty();
+			$("#seq1").val("NC_011137");
+			computeAIDdist();					
+		});  
+
+		$("#dataset1").click(function(){
+			$.ajax({
+				url: "./maps/samplemaps/sample1.txt", 
+				cache: false,
+				success: function(result){
+				var result = JSON.parse(result);
+				console.log("Loading: ",result["mapDescription"]);
+				$('#allInputData').slideDown();
+				$("#file_contents").empty();
+				$("#file_contents").hide();
+				$("#numofsets").val(result["numofsets"]);
+				$("#numofsets").trigger("change");
+				for(var i=0; i<result["namesets"].length; i++){
+					$("#set"+i).html(result["sets"][i]);
+					$("#nameset"+i).val(result["namesets"][i]);
+					$("#colorset"+i).val(result["colorsets"][i]);		
+				}
+				$("#stepstatus").hide();
+				$("#mainprogressbar").hide();
+				$("#computemenu").slideUp();
+			}});		
+		});  
+		$("#dataset2").click(function(){
+			$.ajax({
+				url: "./maps/samplemaps/sample2.txt", 
+				cache: false,
+				success: function(result){
+				var result = JSON.parse(result);
+				console.log("Loading: ",result["mapDescription"]);
+				$('#allInputData').slideDown();
+				$("#file_contents").empty();
+				$("#file_contents").hide();
+				$("#numofsets").val(result["numofsets"]);
+				$("#numofsets").trigger("change");
+				for(var i=0; i<result["namesets"].length; i++){
+					$("#set"+i).html(result["sets"][i]);
+					$("#nameset"+i).val(result["namesets"][i]);
+					$("#colorset"+i).val(result["colorsets"][i]);		
+				}
+				$("#stepstatus").hide();
+				$("#mainprogressbar").hide();
+				$("#computemenu").slideUp();
+			}});
+		});
+		$("#dataset3").click(function(){
+			$.ajax({
+				url: "./maps/samplemaps/sample3.txt", 
+				cache: false,
+				success: function(result){
+				var result = JSON.parse(result);
+				console.log("Loading: ",result["mapDescription"]);
+				$('#allInputData').slideDown();
+				$("#file_contents").empty();
+				$("#file_contents").hide();
+				$("#numofsets").val(result["numofsets"]);
+				$("#numofsets").trigger("change");
+				for(var i=0; i<result["namesets"].length; i++){
+					$("#set"+i).html(result["sets"][i]);
+					$("#nameset"+i).val(result["namesets"][i]);
+					$("#colorset"+i).val(result["colorsets"][i]);		
+				}
+				$("#stepstatus").hide();
+				$("#mainprogressbar").hide();
+				$("#computemenu").slideUp();
+			}});
+		});
+
+		$("#kmerslen").change(function(){
+			fcgrRes = parseInt($("#kmerslen").val());
+			console.log("NEW fcgrRes=",fcgrRes);
+		});
+		$("#getTaxa").change(function(){
+			getTaxa = parseInt($("#getTaxa").val());
+			console.log("NEW getTaxa=", getTaxa);
+		});
+
+		$("#computedist").click(computeAIDdist);
+
+		$("#loadrefmap").click(function(){
+			console.log("Loading RefMap: ", $("#extendmapid").val());
+			$("#inputdatamenu").slideDown();
+
+			$.ajax({
+				url: "./maps/refmaps/refmap_"+$("#extendmapid").val()+".txt", 
+				cache: false,
+				success: function(result){
+				console.log("./maps/refmaps/refmap_"+$("#extendmapid").val()+".txt");
+				var result = JSON.parse(result);
+				console.log("RefMap Description: ",result["mapDescription"]);
+				
+				$('#allInputData').slideDown();
+				$("#file_contents").empty();
+				$("#file_contents").hide();
+				$("#numofsets").val(result["numofsets"]+1);
+				$("#numofsets").trigger("change");
+
+				for(var i=0; i<result["namesets"].length; i++){
+					$("#set"+i).html(result["sets"][i]);
+					$("#nameset"+i).val(result["namesets"][i]);
+					$("#colorset"+i).val(result["colorsets"][i]);		
+				}
+
+				$("#nameset"+result["namesets"].length).val("NEW_points");
+				$("#colorset"+result["namesets"].length).val("black");	
+				if( defaultInputType == "ncbi"){
+					$("#set"+result["namesets"].length).html($("#extrancbi").val());
+				}
+				if( defaultInputType == "fasta"){
+					var tmpOut = [];
+					for(var i=0; i<fastaFilesLoaded.length; i++){
+						tmpOut.push("fastaFile"+String(i+1));
+					}
+					// console.log(tmpOut);
+					$("#set"+result["namesets"].length).html(tmpOut.join(","));
+				}
+				
+
+				$("#stepstatus").hide();
+				$("#mainprogressbar").hide();
+				$("#computemenu").slideUp();
+			}});
+		});
+
+		$("#buildmap").click(function(){
+			noMDS = false;
+			$("#computemenu").slideDown();
+			$('#allInputData').slideUp();
+			$('#allInputDataMinimized').slideDown();
+			console.log("localStorageKeys before=",Object.keys(localStorage));
+			localStorage.clear();
+			console.log("localStorageKeys after=",Object.keys(localStorage));
+			time = new Date();
+			step1A = time.getTime();
+			$("#file_contents").empty();
+			$("#file_contents").hide();
+			$("#mainprogressbar").show();
+			$("#stepstatus").show();
+			$("#stepstatus").html('Step 1 of 3: (NCBI + FCGRs)');
+			$('#progress').html('0%'); 
+			errorHasOccured = false;
+			
+			// GET "accIDs"
+			accIDsSets=[];
+			for(var i=0; i<$("#numofsets").val(); i++){
+				console.log(i,$("#set"+i).val().split(","));
+				var tmpSet = $("#set"+i).val().split(",");
+				if(tmpSet[0]!=""){
+					accIDsSets.push(tmpSet);
+				}
+			}
+			accIDs = [].concat.apply([], accIDsSets);
+			console.log("accIDs=",accIDs);
+			console.log("In total = " + accIDs.length + " sequences.");
+			if(accIDs.length < 5){
+				errorHasOccured = true;
+				$('#progress').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>'+' ERROR [<strong>Found '+accIDs.length+' sequences.</strong>] Please enter at least 5 sequences and try again.]</div>');
+				return;
+			}
+			if(accIDs.length > offlineCompMinSize ){
+				noMDS = true;
+				alert("Your input contains more than ["+offlineCompMinSize+"] sequences. This requires that the last step (MDS) has to be computed offline using either Mathematica or Python. Files and code will be provided to you once you reach that point.");
+			}
+
+			// AJAX CALLS TO NCBI FOR FASTA FILES and/or READING USER FASTA FILES
+			fastaFilesLoadedIndex = 0;
+			callsNCBIDone = 0;
+			for(var i=0; i<accIDs.length; i++){
+				if(!errorHasOccured){
+
+					if(accIDs[i].trim().substr(0,9) == "fastaFile"){
+						
+						// IF IT'S UPLOADED FASTA FILE
+						var reader = new FileReader();
+						reader.onload = (function(f,posInAllSeq, accInAllSeq) {
+							return function(e) { 
+								console.log("fasta: ", accInAllSeq, "fileInfo: ", e.target);
+								var data = e.target.result.split(/\n\r?/gi);
+								var header;
+								if( data.length && data[0][0]==='>' ){ header = data[0]; }
+								while (data.length && data[0][0] === '>') {data.shift();}
+								var outputFasta=data.join('');
+
+								allSequences[posInAllSeq]=[accInAllSeq, outputFasta.length, "NotAvailable", buildFCGR(outputFasta, fcgrRes), header];
+
+								if(true){console.log([posInAllSeq,accInAllSeq,outputFasta.length,'DONE']);}
+								callsNCBIDone += 1;
+
+								// UPDATE PROGRESS AND START computeDistMatrix() IF LAST SEQUENCE IS FASTA
+								progress = callsNCBIDone*100.0/accIDs.length;
+								progress = progress.toFixed(2);
+								if(!errorHasOccured){$('#progress').html(progress+'%');} 
+								if(callsNCBIDone == accIDs.length && !errorHasOccured){
+									time = new Date();
+									step1B = time.getTime();
+									computeDistMatrix();
+								}
+							}
+						})(fastaFilesLoaded[fastaFilesLoadedIndex], i, accIDs[i].trim());
+						
+						reader.readAsText(fastaFilesLoaded[fastaFilesLoadedIndex]);
+						fastaFilesLoadedIndex += 1;
+
+					}else{
+
+						// IF IT'S NCBI ACCESSION NUMBER
+						loadFastaFromNCBI(i, accIDs[i].trim(), function(ind, accID, output, header){
+							allSequences[ind]=[accID, output.length, /**/, buildFCGR(output, fcgrRes), header];
+							if(getTaxa){
+								getTaxaFromNCBI(ind, accID);
+							}else{
+								callsNCBIDone += 0.5;
+								allSequences[ind][2] = "NotAvailable";
+							}
+							if(dbg){console.log([ind,accID,output.length,'DONE']);}
+							callsNCBIDone += 0.5;
+
+							// UPDATE PROGRESS AND START computeDistMatrix() IF LAST SEQUENCE IS NCBI
+							progress = callsNCBIDone*100.0/accIDs.length;
+							progress = progress.toFixed(2);
+							if(!errorHasOccured){$('#progress').html(progress+'%');} 
+							if(callsNCBIDone == accIDs.length && !errorHasOccured){
+								time = new Date();
+								step1B = time.getTime();
+								computeDistMatrix();
+							}
+						});
+					}
+
+				}
+			}
+		});
+		
+		$("#allInputDataShow").click(function(){
+			$("#allInputData").slideToggle();
+		});
+
+		$("#numofsets").change(function(){
+			if($("#numofsets").val() == 0){
+				$("#numofsets").css({"border-color": "red", "border-width":"5px", "border-style":"solid"});
+			}else{
+				// DEFAULT VALUES as reported in chrome by jquery
+				// $("#numofsets").css("border-color");
+				// $("#numofsets").css("border-width");
+				// $("#numofsets").css("border-style");
+				$("#numofsets").css({"border-color": "rgb(169, 169, 169)", "border-width":"0.666667px", "border-style":"solid"});
+			}
+			
+			var colorList = '';
+			for(var i=0; i<labelColors.length; i++){
+				colorList += '<option value="'+labelColors[i]+'">'+ labelColors[i]+'</option>';
+			}
+
+			// save previous accessions used
+			previousdata = [];
+			for(var i=0; i<15; i++){
+				if($("#set"+i).html() != undefined){
+					previousdata.push([ $("#nameset"+i).val(), $("#colorset"+i).val(), $("#set"+i).html() ]);
+				}
+			}
+			console.log("previous_accessions",previousdata);
+
+
+			console.log("numofsets=",$("#numofsets").val());
+			$("#sets").html('');
+			for(var i=0; i<$("#numofsets").val(); i++){
+				$("#sets").html($("#sets").html()+'<p>GroupName: <input type="text" size="5" id="nameset'+i+'" value="Set['+i+']"> GroupColor: <select id="colorset'+i+'">'+colorList+'</select><br>Insert comma separated NCBI accession numbers:<br><textarea id="set'+i+'" autofocus  rows="2" cols="40"></textarea></p>');
+			}
+			for(var i=0; i<$("#numofsets").val(); i++){$("#colorset"+i).val(labelColors[i]);}
+
+			//restore saved accessions
+			for(var i=0; i<previousdata.length; i++){
+				if($("#set"+i).html() != undefined){
+					$("#nameset"+i).val(previousdata[i][0]);
+					$("#colorset"+i).val(previousdata[i][1]);
+					$("#set"+i).html(previousdata[i][2]);
+				}
+			}
+
+
+			if($("#numofsets").val()>0){$("#buildmap").show();}else{$("#buildmap").hide();}
+		});
+
+		var tmpDataset = geturlparamvalue('dataset');
+		if(tmpDataset!=-1 && tmpDataset.slice(0,5)=='local'){
+			newDataset = localStorage.getItem("dataset"+tmpDataset.slice(5));
+			$("#buildmapmenuheader").click();
+			$('#guide-tabs li:eq(2) a').tab('show');
+			$("#file_contents").empty();
+			$("#file_contents").hide();
+			$("#numofsets").val('1');
+			$("#numofsets").trigger("change");
+			$("#set0").html(newDataset);
+			$("#stepstatus").hide();
+			$("#mainprogressbar").hide();
+			
+			// he came here for building, not extending, right?!
+			// OR
+			// $("#buildmapmenucontent").slideDown();
+			// $("#inputdatamenu").slideDown();
+			// $("#extendmapmenucontent").slideUp();
+			// $("#computemenu").slideUp();
+
+
+			//$("#buildmap").click(); allow user to change settings if wanted
+		}else{
+			//console.log('no local dataset');
+		}
+
+		$("#fastafiles").hide();
+		$('input[type=radio][name=extrapointstype]').change(function() {
+      if (this.value == 'ncbi') {
+      	defaultInputType = "ncbi";
+        console.log("ncbi selected..");
+        $("#extrancbi").show();
+      	$("#fastafiles").hide();
+        $("#fastafilesinfo").hide();
+        $("#inputdatamenu").slideUp();
+      	$("#computemenu").slideUp(); 
+      	$("#loadrefmap").show();   	
+      }
+      else if (this.value == 'fasta') {
+      	defaultInputType = "fasta";
+				console.log("fasta selected..");
+				$("#extrancbi").hide();
+      	$("#fastafiles").show();
+				$("#fastafilesinfo").show();
+        $("#inputdatamenu").slideUp();
+      	$("#computemenu").slideUp();
+      	$("#loadrefmap").hide();
+
+      	// Check for the various File API support.
+				if(window.File && window.FileReader && window.FileList && window.Blob){
+					console.log("everything ok");
+				}else{
+					console.log('The File APIs are not fully supported in this browser.');
+					$('#fastafiles').hide()
+					$('#fastafilesinfo').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span> ERROR <strong>The File APIs are not fully supported in this browser.</strong> Please use another browser or input NCBI accession numbers instead.</div>');
+					$("#inputdatamenu").slideUp();
+      		$("#computemenu").slideUp(); 
+				}
+
+				if(fastaFilesLoaded.length >0){
+		    	$("#loadrefmap").show();
+		    } 
+      }
+    	});
+	
+		$("#fastafiles").change(function(evt){
+			console.log("Loading fasta files metadata..");
+			var files = evt.target.files; 
+			fastaFilesLoaded = files;
+			var output = [];
+	    for (var i = 0, f; f = files[i]; i++) {
+	      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ', f.size, ' bytes, last modified: ', f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a','</li>');
+	    }
+	    $("#fastafilesinfo").html('<ul>' + output.join('') + '</ul>');
+	    $("#loadrefmap").show();
+		});
+
+
+
+
+
+
+
+		-----------------------------------------------------
+
+
+			// var eigenval, eigenvec, eigensystem, finalEigenval, finalEigenvec, points, mapfile ;
+	// var fastaFilesLoaded = [], defaultInputType = "ncbi";
+	// var mapID, allSequences={}, distMatrix=[], fcgrRes=9, getTaxa = false;
+	// var accIDs, step1A, step1B, step2A, step2B, step3A, step3B, time;
+	// var callsNCBIDone, progress;
+	// var aidDistInfo = [], map_settings, previousdata = [];
+	// var tmpMap = false;
+
+

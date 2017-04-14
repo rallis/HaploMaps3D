@@ -1,0 +1,3200 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    125624,       3192]
+NotebookOptionsPosition[    122361,       3083]
+NotebookOutlinePosition[    122739,       3099]
+CellTagsIndexPosition[    122696,       3096]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"meta", "=", 
+   RowBox[{"Uncompress", "@", 
+    RowBox[{"Get", "[", "\"\<metadata.dat\>\"", "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ids", "=", 
+   RowBox[{"Drop", "[", 
+    RowBox[{
+     RowBox[{"Import", "[", "\"\<genbank_ids_2016June25.csv\>\"", "]"}], ",", 
+     "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"meta", "//", "Dimensions"}], ",", 
+   RowBox[{"ids", "//", "Dimensions"}]}], "}"}]}], "Input",
+ CellChangeTimes->{{3.6992746146063175`*^9, 3.6992746189349055`*^9}, {
+  3.6992751877083855`*^9, 3.699275211810177*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"34743", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"32058", ",", "4"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.699274621278906*^9, {3.6992751959019804`*^9, 3.699275213294737*^9}, 
+   3.699281819922326*^9, 3.699295272993553*^9, 3.6993142379915476`*^9, 
+   3.6993194083229218`*^9, 3.699365394278023*^9, 3.6999139726838565`*^9, 
+   3.6999180336577873`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"meta", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], ",", 
+    RowBox[{"ids", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}], "}"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.699275220237749*^9, 3.699275226886303*^9}, 
+   3.6992755453190002`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Dynamic", "[", "s", "]"}], "]"}], ";", 
+  RowBox[{"s", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"allids", "=", 
+   RowBox[{"ids", "[", 
+    RowBox[{"[", 
+     RowBox[{";;", ",", "1"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"associds", "=", 
+   RowBox[{"Association", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "\[Rule]", "#"}], "&"}], "/@", 
+     "ids"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fullmeta", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"s", "+=", "1"}], ";", "s"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "3", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"KeyExistsQ", "[", 
+          RowBox[{"associds", ",", 
+           RowBox[{"#", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}], ",", 
+         RowBox[{"associds", "[", 
+          RowBox[{"#", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+         RowBox[{"{", "}"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], "&"}], "/@",
+     "meta"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.699275234143971*^9, 3.6992752431179333`*^9}}],
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[$CellContext`s, StandardForm],
+  ImageSizeCache->{42., {0., 10.}}]], "Print",
+ CellChangeTimes->{3.699275244499257*^9, 3.699281820868209*^9, 
+  3.699295274555523*^9, 3.699314242015086*^9, 3.6993194108460493`*^9, 
+  3.6993653962625213`*^9, 3.6999139852476835`*^9, 3.6999180345016203`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"associds", "[", "\"\<AB055387.1\>\"", "]"}], ",", 
+    RowBox[{"fullmeta", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}], "}"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.6992753790007477`*^9, 3.6992754203335643`*^9}, 
+   3.6992755899184647`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsUnscaled", "=", 
+   RowBox[{"Uncompress", "@", 
+    RowBox[{"Get", "[", "\"\<mds5-manhat.dat\>\"", "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pts", "=", 
+    RowBox[{"Transpose", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Rescale", "[", 
+        RowBox[{"#", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Min", "[", "#", "]"}], ",", 
+           RowBox[{"Max", "[", "#", "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], "&"}], "/@", 
+      RowBox[{"Transpose", "[", "ptsUnscaled", "]"}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"ListPointPlot3D", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"RandomChoice", "[", 
+        RowBox[{"pts", ",", 
+         RowBox[{"Length", "@", "pts"}]}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{";;", ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "2", ",", "3"}], "}"}]}], "]"}], "]"}], ",", 
+      RowBox[{"BoxRatios", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", " ", "1", ",", " ", "1"}], "}"}]}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", "All"}]}], "]"}], ";"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"pts", "//", "Dimensions"}]}], "Input",
+ CellChangeTimes->{{3.6992756415058565`*^9, 3.6992756594528875`*^9}, {
+  3.699282120623174*^9, 3.6992821266362963`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"34743", ",", "5"}], "}"}]], "Output",
+ CellChangeTimes->{3.6992756659421253`*^9, 3.6992818240198765`*^9, 
+  3.699282128105119*^9, 3.6992952763935957`*^9, 3.699314247101725*^9, 
+  3.699319413890444*^9, 3.699365397997078*^9, 3.699914005499817*^9, 
+  3.6999180366268806`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<H\>\"", ",", "7085"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<L\>\"", ",", "4007"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<M\>\"", ",", "3029"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<U\>\"", ",", "2764"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<B\>\"", ",", "2332"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<D\>\"", ",", "1673"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<J\>\"", ",", "1485"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<T\>\"", ",", "1441"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<K\>\"", ",", "1435"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<C\>\"", ",", "1047"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<A\>\"", ",", "942"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<R\>\"", ",", "737"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<F\>\"", ",", "604"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<N\>\"", ",", "559"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<I\>\"", ",", "487"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<V\>\"", ",", "471"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<W\>\"", ",", "379"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<X\>\"", ",", "335"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<E\>\"", ",", "262"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<G\>\"", ",", "254"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Q\>\"", ",", "164"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Z\>\"", ",", "141"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Y\>\"", ",", "123"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<P\>\"", ",", "86"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<S\>\"", ",", "14"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<O\>\"", ",", "4"}], "}"}]}], "}"}], "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{"haplo", "=", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<B\>\"", ",", "\"\<X\>\"", ",", "\"\<H\>\"", ",", "\"\<S\>\"", ",", 
+       "\"\<M\>\"", ",", "\"\<G\>\"", ",", "\"\<L\>\"", ",", "\"\<C\>\"", 
+       ",", "\"\<A\>\"", ",", "\"\<F\>\"", ",", "\"\<T\>\"", ",", "\"\<J\>\"",
+        ",", "\"\<D\>\"", ",", "\"\<U\>\"", ",", "\"\<P\>\"", ",", 
+       "\"\<Q\>\"", ",", "\"\<V\>\"", ",", "\"\<N\>\"", ",", "\"\<W\>\"", 
+       ",", "\"\<K\>\"", ",", "\"\<I\>\"", ",", "\"\<R\>\"", ",", "\"\<Z\>\"",
+        ",", "\"\<Y\>\"", ",", "\"\<E\>\"", ",", "\"\<O\>\""}], "}"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"haplo", "=", 
+     RowBox[{"{", 
+      RowBox[{"\"\<O\>\"", ",", "\"\<S\>\""}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"haplo", "=", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<H\>\"", ",", "\"\<L\>\"", ",", "\"\<M\>\"", ",", "\"\<U\>\"", ",", 
+       "\"\<B\>\"", ",", "\"\<D\>\"", ",", "\"\<J\>\"", ",", "\"\<T\>\"", 
+       ",", "\"\<K\>\"", ",", "\"\<C\>\"", ",", "\"\<A\>\"", ",", "\"\<R\>\"",
+        ",", "\"\<F\>\"", ",", "\"\<N\>\"", ",", "\"\<I\>\"", ",", 
+       "\"\<V\>\"", ",", "\"\<W\>\"", ",", "\"\<X\>\"", ",", "\"\<E\>\"", 
+       ",", "\"\<G\>\"", ",", "\"\<Q\>\"", ",", "\"\<Z\>\"", ",", 
+       "\"\<Y\>\""}], "}"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.6992818498134823`*^9, 3.699281850978877*^9}, 
+   3.6992821049193964`*^9, {3.699282483457181*^9, 3.699282484962734*^9}, {
+   3.699282795132514*^9, 3.699282799622472*^9}, {3.699283360594457*^9, 
+   3.699283364085579*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ls", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StringTake", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"Min", "[", 
+          RowBox[{"2", ",", 
+           RowBox[{"StringLength", "[", "#", "]"}]}], "]"}]}], "}"}]}], "]"}],
+      "&"}], "/@", 
+    RowBox[{"haplometa", "[", 
+     RowBox[{"[", 
+      RowBox[{";;", ",", "5", ",", "4"}], "]"}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ls", ";"}]}], "Input",
+ CellChangeTimes->{{3.699408767400955*^9, 3.6994088557809844`*^9}, 
+   3.699408967516692*^9, 3.6999141425014544`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Sort", "[", 
+   RowBox[{
+    RowBox[{"Tally", "[", "ls", "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"#1", "[", 
+       RowBox[{"[", "2", "]"}], "]"}], ">", 
+      RowBox[{"#2", "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], "&"}]}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6994088584240227`*^9, 3.6994088986480865`*^9}, 
+   3.6999140754916134`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Sample", " ", "Accession", " ", "NUmbers"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SeedRandom", "[", "12345", "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"haplometa", "  ", "=", " ", 
+     RowBox[{"Select", "[", 
+      RowBox[{"fullmeta", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Length", "@", 
+          RowBox[{"#", "[", 
+           RowBox[{"[", "5", "]"}], "]"}]}], ">", "0"}], "&"}]}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"haploIndices", "=", 
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"tmp", "=", 
+         RowBox[{"Select", "[", 
+          RowBox[{"haplometa", ",", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"StringTake", "[", 
+                RowBox[{
+                 RowBox[{"#", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"5", ",", "3"}], "]"}], "]"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"1", ",", 
+                   RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"StringLength", "@", 
+                    RowBox[{"haplo", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], ",", 
+                    RowBox[{"StringLength", "[", 
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"5", ",", "3"}], "]"}], "]"}], "]"}]}], "]"}]}], 
+                  "}"}]}], "]"}], "\[Equal]", 
+               RowBox[{"haplo", "[", 
+                RowBox[{"[", "i", "]"}], "]"}]}], ")"}], "&&", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"#", "[", 
+                RowBox[{"[", "4", "]"}], "]"}], ">", "16000"}], ")"}]}], 
+            "&"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"RandomSample", "[", 
+         RowBox[{
+          RowBox[{"tmp", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", ",", "1"}], "]"}], "]"}], ",", 
+          RowBox[{"(*", "*)"}], "100"}], "]"}]}], "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"Length", "@", "haplo"}]}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"allhaploindices", "=", 
+     RowBox[{"Flatten", "@", "haploIndices"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.6992827673870444`*^9, 3.6992828183699484`*^9}, {
+  3.6992829650979424`*^9, 3.6992830109443216`*^9}, {3.6992831643394012`*^9, 
+  3.699283234453553*^9}, {3.699283377344643*^9, 3.6992833794004927`*^9}, {
+  3.699295752683169*^9, 3.6992957541304073`*^9}, {3.699296534356882*^9, 
+  3.699296537769425*^9}, {3.699298057027453*^9, 3.699298067865211*^9}, {
+  3.6992982045461206`*^9, 3.6992982071261053`*^9}, {3.699299587936336*^9, 
+  3.699299588573841*^9}, {3.699365426520804*^9, 3.699365430598716*^9}, {
+  3.6993664044291763`*^9, 3.699366433123201*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"newDir", "=", "\"\<ref_23_100_greater16k\>\""}], ";"}], 
+  RowBox[{"(*", " ", 
+   RowBox[{"NEW", " ", "DIR"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"!", 
+     RowBox[{"FileExistsQ", "[", "newDir", "]"}]}], ",", 
+    RowBox[{"CreateDirectory", "[", "newDir", "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "newDir", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6992956287873087`*^9, 3.6992956769582243`*^9}, {
+  3.699295772177167*^9, 3.69929581581568*^9}, {3.699295873638105*^9, 
+  3.6992959170369997`*^9}, {3.699295981568041*^9, 3.6992959976584167`*^9}, {
+  3.699296126595677*^9, 3.6992961831034307`*^9}, {3.699296546209124*^9, 
+  3.699296547302003*^9}, {3.699298034983101*^9, 3.6992980354081993`*^9}, {
+  3.699298073047762*^9, 3.69929807481564*^9}, {3.6992982136032333`*^9, 
+  3.6992982144974203`*^9}, {3.6992987934864817`*^9, 3.699298794080442*^9}, {
+  3.699298919383243*^9, 3.6992989204285917`*^9}, {3.699299305086368*^9, 
+  3.6992993057316713`*^9}, {3.699299592056314*^9, 3.699299592783565*^9}, {
+  3.699366441939804*^9, 3.6993664571830373`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Download", " ", "files"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Dynamic", "[", "i", "]"}], ",", 
+       RowBox[{"Length", "@", "allhaploindices"}]}], "}"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"SetDirectory", "[", 
+     RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", 
+       RowBox[{"FileExistsQ", "[", "newDir", "]"}]}], ",", 
+      RowBox[{"CreateDirectory", "[", "newDir", "]"}]}], "]"}], ";", 
+    RowBox[{"SetDirectory", "[", "newDir", "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", 
+       RowBox[{"FileExistsQ", "[", "\"\<fasta\>\"", "]"}]}], ",", 
+      RowBox[{"CreateDirectory", "[", "\"\<fasta\>\"", "]"}]}], "]"}], ";", 
+    RowBox[{"SetDirectory", "[", "\"\<fasta\>\"", "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"tmpAcc", "=", 
+        RowBox[{"fullmeta", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"allhaploindices", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], ",", "3"}], "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"URLSave", "[", 
+        RowBox[{
+         RowBox[{
+         "\"\<http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=\
+nuccore&rettype=fasta&retmode=text&id=\>\"", "<>", "tmpAcc"}], ",", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Directory", "[", "]"}], ",", 
+            RowBox[{"tmpAcc", "<>", "\"\<.fasta\>\""}]}], "}"}], "]"}]}], 
+        "]"}], ";"}], "\[IndentingNewLine]", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "allhaploindices", "]"}]}], "}"}]}], "]"}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.699296185411512*^9, 3.699296346627864*^9}, {
+   3.699296381191606*^9, 3.6992963982250013`*^9}, {3.69929646106909*^9, 
+   3.6992964618136263`*^9}, {3.699296558811504*^9, 3.699296565111588*^9}, {
+   3.699298040958823*^9, 3.699298050596883*^9}, {3.699299239449978*^9, 
+   3.699299268006432*^9}, 3.6993654236427546`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   DynamicBox[ToBoxes[$CellContext`i, StandardForm],
+    ImageSizeCache->{16., {0., 10.}}], ",", "2300"}], "}"}]], "Print",
+ CellChangeTimes->{{3.699296410123448*^9, 3.6992964249629717`*^9}, 
+   3.6992964631005907`*^9, {3.699296551819311*^9, 3.699296566418682*^9}, 
+   3.699298218501134*^9, 3.699299321538186*^9, 3.6992996023500566`*^9, 
+   3.699314276042963*^9, 3.699320157578904*^9, 3.6993664676115646`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"SAVE", " ", "INFO"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SetDirectory", "[", 
+     RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+    RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+    RowBox[{"out", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"out", "=", 
+        RowBox[{"out", "<>", 
+         RowBox[{"#", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "<>", "\"\<\\n\>\"", "<>", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"#", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "]"}], "<>", "\"\<\\n\\n\>\""}]}], 
+       ")"}], "&"}], "/@", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"haplo", ",", "haploIndices"}], "}"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{"\"\<haploinfo.txt\>\"", ",", "out"}], "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.6992980829380217`*^9, 3.6992980882948427`*^9}, 
+   3.6992993453501883`*^9, {3.6992993809058247`*^9, 3.699299381062687*^9}}],
+
+Cell[" ", "Text",
+ Editable->False,
+ Selectable->False,
+ CellFrame->{{0, 0}, {0, 2}},
+ ShowCellBracket->False,
+ CellMargins->{{0, 0}, {1, 1}},
+ CellElementSpacings->{"CellMinHeight"->1},
+ CellFrameMargins->0,
+ CellFrameColor->RGBColor[0, 0, 1],
+ CellSize->{Inherited, 4}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"CGR", " ", "READ"}], "-", "BUILD"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SetDirectory", "[", 
+     RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+    RowBox[{"Needs", "[", "\"\<GenResearch`\>\"", "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+    RowBox[{"cgrOrder", "=", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<A\>\"", ",", "\"\<C\>\"", ",", "\"\<G\>\"", ",", "\"\<T\>\""}], 
+      "}"}]}], ";", 
+    RowBox[{"k", "=", "9"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"curFileNamesOrder", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"fullmeta", "[", 
+         RowBox[{"[", 
+          RowBox[{"#", ",", "3"}], "]"}], "]"}], "<>", "\"\<.fasta\>\""}], 
+       "&"}], "/@", "allhaploindices"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{"\"\<cgrFileOrder.txt\>\"", ",", "curFileNamesOrder"}], "]"}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.593524382339702*^9, 3.5935244108133307`*^9}, {
+   3.5935247629389086`*^9, 3.5935247672413683`*^9}, 3.5935396560638337`*^9, 
+   3.595082886184173*^9, {3.595352406508503*^9, 3.5953524158750906`*^9}, {
+   3.595353773216926*^9, 3.595353781951719*^9}, {3.598142662426607*^9, 
+   3.598142664724547*^9}, {3.6003573854105573`*^9, 3.6003573866263*^9}, {
+   3.601608289459963*^9, 3.6016083140033665`*^9}, {3.601608445928912*^9, 
+   3.6016084725984373`*^9}, {3.6016085520669827`*^9, 3.601608618405777*^9}, {
+   3.601608708339921*^9, 3.60160872562891*^9}, {3.601611377493966*^9, 
+   3.6016114004572067`*^9}, {3.6016114652909203`*^9, 3.60161148195175*^9}, {
+   3.60161164673244*^9, 3.6016116477308416`*^9}, {3.601614937069599*^9, 
+   3.6016149448020415`*^9}, {3.6016152179776664`*^9, 
+   3.6016152300643578`*^9}, {3.6016152940390167`*^9, 
+   3.6016153288100057`*^9}, {3.601615521656036*^9, 3.6016155662145844`*^9}, {
+   3.601646761479369*^9, 3.6016467948932805`*^9}, {3.601646849297392*^9, 
+   3.6016468533236227`*^9}, {3.6016912031341095`*^9, 
+   3.6016912224352136`*^9}, {3.6031184966079955`*^9, 3.603118502524609*^9}, {
+   3.6350869257021914`*^9, 3.6350869345536404`*^9}, {3.640286811083008*^9, 
+   3.640286812392578*^9}, {3.6403533335009766`*^9, 3.6403533336884766`*^9}, {
+   3.6403906788085938`*^9, 3.6403906801835938`*^9}, {3.640739373598633*^9, 
+   3.6407393737626953`*^9}, 3.6958185730947266`*^9, {3.69929846785679*^9, 
+   3.699298475096438*^9}, {3.6992985976116858`*^9, 3.699298612637802*^9}, {
+   3.699298932871193*^9, 3.699298937940281*^9}, {3.699298978893547*^9, 
+   3.6992989850246487`*^9}, {3.6992990597460613`*^9, 3.699299089071498*^9}, {
+   3.699299159380022*^9, 3.69929916195391*^9}, {3.699299400220055*^9, 
+   3.699299402384378*^9}, {3.6992994787047577`*^9, 3.699299500990241*^9}, {
+   3.6992995370347157`*^9, 3.699299538986329*^9}, {3.699299661075238*^9, 
+   3.699299676030589*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["newDir"], "Input",
+ CellChangeTimes->{{3.6993200785626683`*^9, 3.6993200815892467`*^9}}],
+
+Cell[BoxData["\<\"ref_23_100_greater16k\"\>"], "Output",
+ CellChangeTimes->{3.6993200820580444`*^9, 3.6993202000173426`*^9, 
+  3.6993673180759883`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "newDir", ",", 
+      "\"\<fasta\>\""}], "}"}], "]"}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", 
+    RowBox[{"AbsoluteTiming", "[", 
+     RowBox[{
+      RowBox[{"Monitor", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"allCGRs", " ", "=", " ", 
+          RowBox[{"{", "}"}]}], ";", " ", 
+         RowBox[{"flnames", " ", "=", "curFileNamesOrder"}], ";", "\n", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"i", " ", "=", " ", "1"}], ",", " ", 
+           RowBox[{"i", " ", "\[LessEqual]", " ", 
+            RowBox[{"Length", "[", "flnames", "]"}]}], ",", " ", 
+           RowBox[{"i", "++"}], ",", " ", "\n", "\t", "\n", "\t", 
+           RowBox[{
+            RowBox[{"nextNewCGR", " ", "=", " ", 
+             RowBox[{"linearCGRgrayscale", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Import", "[", 
+                 RowBox[{"flnames", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", " ", "cgrOrder", ",", 
+               " ", "k"}], "]"}]}], ";", "\n", "\n", "\t", 
+            RowBox[{"(*", 
+             RowBox[{
+              RowBox[{"nextNewCGR", " ", "=", " ", 
+               RowBox[{
+                RowBox[{"sparseFCGR", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"Import", "[", 
+                    RowBox[{"flnames", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                   RowBox[{"[", "1", "]"}], "]"}], ",", " ", "cgrOrder", ",", 
+                  " ", "k"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ";", "\n", "\t", 
+              RowBox[{"newCGRList", "=", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"nextNewCGR", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"i1", ",", "1"}], "]"}], "]"}], "\[Rule]", 
+                  RowBox[{"nextNewCGR", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"i1", ",", "2"}], "]"}], "]"}]}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i1", ",", "1", ",", 
+                   RowBox[{"Length", "@", "nextNewCGR"}]}], "}"}]}], "]"}]}], 
+              ";", "\n", "    ", 
+              RowBox[{"nextNewCGR", "=", 
+               RowBox[{"SparseArray", "[", 
+                RowBox[{"newCGRList", ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"2", "^", "k"}], ",", 
+                   RowBox[{"2", "^", "k"}]}], "}"}]}], "]"}]}], ";"}], "*)"}],
+             "\n", "\n", "\t", 
+            RowBox[{"AppendTo", "[", 
+             RowBox[{"allCGRs", ",", " ", "nextNewCGR"}], "]"}], ";"}]}], 
+          "\n", "]"}], ";"}], "\n", ",", "\n", 
+        RowBox[{"TableForm", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"StringJoin", "[", 
+            RowBox[{"\"\<Reading file: \>\"", ",", " ", 
+             RowBox[{"ToString", "[", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", 
+                RowBox[{"Length", "[", "flnames", "]"}]}], "}"}], "]"}], ",", 
+             " ", "\"\< - \>\"", ",", " ", 
+             RowBox[{"flnames", "[", 
+              RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", " ", "\n", 
+           RowBox[{"ProgressIndicator", "[", 
+            RowBox[{
+             RowBox[{"Dynamic", "[", "i", "]"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", " ", 
+               RowBox[{"Length", "[", "flnames", "]"}]}], "}"}]}], "]"}]}], 
+          "}"}], "]"}]}], "]"}], ";", "\n", 
+      RowBox[{"\"\<reading \>\"", "<>", 
+       RowBox[{"ToString", "[", 
+        RowBox[{"i", "-", "1"}], "]"}], "<>", "\"\< files\>\""}]}], "]"}], 
+    "]"}], ";"}], " "}]}], "Input",
+ CellChangeTimes->{
+  3.699298483736897*^9, {3.699298514156762*^9, 3.699298589767262*^9}, {
+   3.699298624866736*^9, 3.6992986710959578`*^9}, 3.699298721281743*^9, {
+   3.699299128245154*^9, 3.699299146255213*^9}, {3.699299407651874*^9, 
+   3.6992994269905233`*^9}, {3.699299563043708*^9, 3.699299565849073*^9}, {
+   3.6993157736253796`*^9, 3.6993157761482267`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"248.87165881877473`", ",", "\<\"reading 2300 files\"\>"}], 
+  "}"}]], "Print",
+ CellChangeTimes->{
+  3.6993160228082495`*^9, {3.6993200676974616`*^9, 3.6993200968989925`*^9}, 
+   3.699320439368825*^9, 3.699367569548212*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+  RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+  RowBox[{"Put", "[", 
+   RowBox[{
+    RowBox[{"Compress", "@", "allCGRs"}], ",", "\"\<allCGRs.dat\>\""}], "]"}],
+   ";", 
+  RowBox[{"Dimensions", "@", "allCGRs"}]}]], "Input",
+ CellChangeTimes->{{3.699298711973323*^9, 3.699298757688863*^9}, {
+  3.699299433032072*^9, 3.6992994544232063`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2300", ",", "512", ",", "512"}], "}"}]], "Output",
+ CellChangeTimes->{3.699298716444696*^9, 3.699298771389166*^9, 
+  3.6992994705202503`*^9, 3.6993163212356143`*^9, 3.6993678777359705`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+   RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+   RowBox[{"allCGRs", "=", 
+    RowBox[{"Uncompress", "@", 
+     RowBox[{"Get", "[", "\"\<allCGRs.dat\>\"", "]"}]}]}], ";", 
+   RowBox[{"Dimensions", "@", "allCGRs"}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.6993194562934437`*^9, 3.699319490635542*^9}, {
+  3.6993675878723893`*^9, 3.699367589955963*^9}}],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.699319459914262*^9, 3.6993200591509047`*^9}]
+}, Open  ]],
+
+Cell[" ", "Text",
+ Editable->False,
+ Selectable->False,
+ CellFrame->{{0, 0}, {0, 2}},
+ ShowCellBracket->False,
+ CellMargins->{{0, 0}, {1, 1}},
+ CellElementSpacings->{"CellMinHeight"->1},
+ CellFrameMargins->0,
+ CellFrameColor->RGBColor[0, 0, 1],
+ CellSize->{Inherited, 4}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"curHaploOrder", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"associds", "[", 
+       RowBox[{"[", 
+        RowBox[{"First", "[", 
+         RowBox[{"StringSplit", "[", 
+          RowBox[{"#", ",", "\"\<.fasta\>\""}], "]"}], "]"}], "]"}], "]"}], 
+      "[", 
+      RowBox[{"[", "3", "]"}], "]"}], "&"}], "/@", "curFileNamesOrder"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{3.699300011082062*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"filteredHaplo", " ", "=", " ", 
+   RowBox[{"Select", "[", 
+    RowBox[{"haplometa", ",", 
+     RowBox[{
+      RowBox[{"MemberQ", "[", 
+       RowBox[{"haplo", ",", 
+        RowBox[{"StringTake", "[", 
+         RowBox[{
+          RowBox[{"#", "[", 
+           RowBox[{"[", 
+            RowBox[{"5", ",", "3"}], "]"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", "1"}], "}"}]}], "]"}]}], "]"}], "&"}]}], "]"}]}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{"filteredHaplo", "//", "Dimensions"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"31756", ",", "5"}], "}"}]], "Output",
+ CellChangeTimes->{3.699301414488831*^9, 3.69931635082255*^9, 
+  3.699319395102769*^9, 3.6993204501263213`*^9, 3.6993678886956625`*^9, 
+  3.6999141786577306`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Dynamic", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<C=\>\"", ",", "totCor", ",", "\"\<W=\>\"", ",", "totWro", ",", 
+      "\"\<T=\>\"", ",", "total", ",", "\"\<top5=\>\"", ",", "totTOP5", ",", 
+      RowBox[{"Length", "@", "filteredHaplo"}], ",", 
+      RowBox[{"N", "[", 
+       RowBox[{
+        RowBox[{"100", "*", 
+         RowBox[{"totCor", "/", "total"}]}], ",", "4"}], "]"}], ",", 
+      "curAcc"}], "}"}], "]"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"totCor", "=", "0"}], ";", 
+  RowBox[{"totWro", "=", "0"}], ";", 
+  RowBox[{"total", "=", "0"}], ";", 
+  RowBox[{"totTOP5", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"haplometaINDEX", "=", "1"}], ",", 
+   RowBox[{"haplometaINDEX", "\[LessEqual]", 
+    RowBox[{"Length", "@", "filteredHaplo"}]}], ",", 
+   RowBox[{"haplometaINDEX", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"curAcc", "=", 
+     RowBox[{"filteredHaplo", "[", 
+      RowBox[{"[", 
+       RowBox[{"haplometaINDEX", ",", "3"}], "]"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", "curAcc", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"curFilePath", "=", 
+       RowBox[{"URLSave", "[", 
+        RowBox[{
+         RowBox[{
+         "\"\<http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=\
+nuccore&rettype=fasta&retmode=text&id=\>\"", "<>", "curAcc"}], ",", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"$TemporaryDirectory", ",", 
+            RowBox[{"curAcc", "<>", "\"\<.fasta\>\""}]}], "}"}], "]"}]}], 
+        "]"}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"curFilePath", "=", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<allfiles\>\"", ",", 
+        RowBox[{"curAcc", "<>", "\"\<.fasta\>\""}]}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", "curFilePath", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"curFileSeq", "=", 
+       RowBox[{"First", "@", 
+        RowBox[{"Import", "[", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"$TemporaryDirectory", ",", 
+            RowBox[{"curAcc", "<>", "\"\<.fasta\>\""}]}], "}"}], "]"}], 
+         "]"}]}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"curFileSeq", "=", 
+     RowBox[{"First", "@", 
+      RowBox[{"Import", "[", "curFilePath", "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", "curFileSeq", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"curCGR", " ", "=", " ", 
+     RowBox[{"linearCGRgrayscale", "[", 
+      RowBox[{"curFileSeq", ",", " ", "cgrOrder", ",", " ", "k"}], "]"}]}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", 
+       RowBox[{"{", 
+        RowBox[{"curFilePath", ",", 
+         RowBox[{"StringLength", "@", "curFileSeq"}], ",", 
+         RowBox[{"Dimensions", "@", "curCGR"}]}], "}"}], "]"}], ";"}], "*)"}],
+     "\[IndentingNewLine]", 
+    RowBox[{"(*", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"newDists", "=", 
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"ApproxInfoDist", "[", 
+        RowBox[{"curCGR", ",", 
+         RowBox[{"allCGRs", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"Length", "@", "allCGRs"}]}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"tmp", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Mean", "[", "#", "]"}], "&"}], "/@", 
+      RowBox[{"Partition", "[", 
+       RowBox[{"newDists", ",", "100"}], 
+       RowBox[{"(*", "*)"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"pos", "=", 
+     RowBox[{
+      RowBox[{"Position", "[", 
+       RowBox[{"tmp", ",", 
+        RowBox[{"Min", "[", "tmp", "]"}]}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "@", 
+       RowBox[{"Sort", "[", 
+        RowBox[{
+         RowBox[{"Transpose", "[", 
+          RowBox[{"{", 
+           RowBox[{"haplo", ",", "tmp"}], "}"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"#1", "[", 
+            RowBox[{"[", "2", "]"}], "]"}], "<", 
+           RowBox[{"#2", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "&"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", "pos", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"myguess", "=", 
+     RowBox[{"haplo", "[", 
+      RowBox[{"[", "pos", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"corLabel", " ", "=", " ", 
+     RowBox[{"filteredHaplo", "[", 
+      RowBox[{"[", 
+       RowBox[{"haplometaINDEX", ",", "5", ",", "3"}], "]"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"total", "+=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"top", "=", 
+     RowBox[{"Take", "[", 
+      RowBox[{
+       RowBox[{"Sort", "[", 
+        RowBox[{
+         RowBox[{"Transpose", "[", 
+          RowBox[{"{", 
+           RowBox[{"haplo", ",", "tmp"}], "}"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"#1", "[", 
+            RowBox[{"[", "2", "]"}], "]"}], "<", 
+           RowBox[{"#2", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "&"}]}], "]"}], ",", "5"}], 
+      "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"myguess", "\[Equal]", 
+       RowBox[{"StringTake", "[", 
+        RowBox[{"corLabel", ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "1"}], "}"}]}], "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"totCor", "+=", "1"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"totWro", "+=", "1"}], ";", 
+       RowBox[{"Print", "[", 
+        RowBox[{"{", 
+         RowBox[{"curAcc", ",", "myguess", ",", "corLabel", ",", 
+          RowBox[{"associds", "[", 
+           RowBox[{"[", "curAcc", "]"}], "]"}], ",", "haplometaINDEX", ",", 
+          "top"}], "}"}], "]"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"MemberQ", "[", 
+          RowBox[{
+           RowBox[{"top", "[", 
+            RowBox[{"[", 
+             RowBox[{";;", ",", "1"}], "]"}], "]"}], ",", 
+           RowBox[{"StringTake", "[", 
+            RowBox[{"corLabel", ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "1"}], "}"}]}], "]"}]}], "]"}], ",", 
+         RowBox[{"totTOP5", "+=", "1"}]}], "]"}], ";"}]}], 
+     "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",
+ CellChangeTimes->CompressedData["
+1:eJwdxTtIAnEAB+A7kSuqC+rKVFKIKEkoHISgKYseHAaWQkMWlEkQpBGBu1BB
+R2pPCmorp6LJqaWawpboCVcOvdWTsCQRuR7/n8PHVzfmHXArKIpSE7jBV/Mg
+BiXL7wH3iBdnTO+4WLz5xKfh6iyePBaoe3LqvI3B3R2bLDYz8Qqsn1aq8JkY
+68K76S0eu+0uO6bu/KM4d1m5gHv7WvdxuPEj/0yW1U4Ze/q92hfy0UqgCe99
+b9xiT8lUDC/vWNJ40J4qbDO3Z3E5v1o4FJT/sF+w0q9k7quqCLfMm1g8fuXi
+sNS5pMFMUNBj5bCqHhvYQwMWIxNG7Dxx0DLZGNEpcDzhK8MZfo3FI+tR5Q85
+MZdncIC/LsU57bYGz9ZGe+iQZNFdDFlx5q3ZhpOaJwf+B2W31WE=
+  "]],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.69932117330159*^9, 3.699354892765606*^9, 
+  3.69936794485153*^9, 3.6993680461397552`*^9, 3.6993699984458485`*^9, 
+  3.699378730406042*^9, 3.6993788577377667`*^9, 3.699379656126583*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Histogram", "[", 
+  RowBox[{
+   RowBox[{"Sort", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"fullmeta", "[", 
+       RowBox[{"[", 
+        RowBox[{"#", ",", "4"}], "]"}], "]"}], "&"}], "/@", 
+     RowBox[{"Range", "[", 
+      RowBox[{"Length", "@", "fullmeta"}], "]"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"14000", ",", "17000", ",", "200"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.699365655707757*^9, 3.699365701634241*^9}, {
+  3.6993657738357134`*^9, 3.6993658154634304`*^9}, {3.6993658477585506`*^9, 
+  3.69936585081932*^9}, {3.6993659264645123`*^9, 3.6993659529323664`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+    Opacity[0.581], Thickness[Small]}], {}, 
+    {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+     Opacity[0.581], Thickness[Small]}], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{15400., 0}, {15600., 839}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{226.39665032679727`, 252.49550653594747`}, {
+          103.29266695301375`, 109.58136927652824`}}],
+        StatusArea[#, 839]& ,
+        TagBoxNote->"839"],
+       StyleBox["839", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[839, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{15800., 0}, {16000., 1}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{277.3443627450979, 303.4432189542481}, {
+          108.94961873740606`, 109.58136927652824`}}],
+        StatusArea[#, 1]& ,
+        TagBoxNote->"1"],
+       StyleBox["1", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[1, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{16200., 0}, {16400., 8}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{328.2920751633983, 354.39093137254895`}, {
+          108.90236496355074`, 109.58136927652824`}}],
+        StatusArea[#, 8]& ,
+        TagBoxNote->"8"],
+       StyleBox["8", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[8, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{16400., 0}, {16600., 33890}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{353.76593137254895`, 
+          379.86478758169915`}, {-119.81940157437295`, 109.58136927652824`}}],
+        StatusArea[#, 33890]& ,
+        TagBoxNote->"33890"],
+       StyleBox["33890", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[33890, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{16600., 0}, {16800., 5}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{379.23978758169915`, 405.33864379084935`}, {
+          108.9226165809173, 109.58136927652824`}}],
+        StatusArea[#, 5]& ,
+        TagBoxNote->"5"],
+       StyleBox["5", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[5, {}], "Tooltip"]& ]}, {}, {}}, {{}, {}, {}, {}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{13940., 0},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  PlotRange->{{14000., 17000.}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.6993656578781524`*^9, 3.69936570442126*^9}, {
+  3.6993657756483192`*^9, 3.6993658160330963`*^9}, {3.699365941479916*^9, 
+  3.699365953668273*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"HistogramList", "[", 
+  RowBox[{
+   RowBox[{"haplometa", "[", 
+    RowBox[{"[", 
+     RowBox[{";;", ",", "4"}], "]"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"14000", ",", "17000", ",", "200"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.699366007099483*^9, 3.69936606528302*^9}, {
+  3.6993661058926973`*^9, 3.699366106752077*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "14000", ",", "14200", ",", "14400", ",", "14600", ",", "14800", ",", 
+     "15000", ",", "15200", ",", "15400", ",", "15600", ",", "15800", ",", 
+     "16000", ",", "16200", ",", "16400", ",", "16600", ",", "16800", ",", 
+     "17000"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+     "837", ",", "0", ",", "0", ",", "0", ",", "3", ",", "31016", ",", "4", 
+     ",", "0"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.699366010089628*^9, 3.699366027586767*^9}, 
+   3.6993660656968503`*^9, 3.6993661072603188`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"allhaploindices", "//", "Length"}]], "Input",
+ CellChangeTimes->{{3.6993659818542223`*^9, 3.6993659948174086`*^9}}],
+
+Cell[BoxData["2300"], "Output",
+ CellChangeTimes->{{3.6993659841115055`*^9, 3.699365995213315*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"haploIndices", "//", "Length"}]], "Input",
+ CellChangeTimes->{{3.6993659981198673`*^9, 3.6993660041359243`*^9}}],
+
+Cell[BoxData["23"], "Output",
+ CellChangeTimes->{{3.6993659998759546`*^9, 3.6993660045141373`*^9}}]
+}, Open  ]],
+
+Cell[" ", "Text",
+ Editable->False,
+ Selectable->False,
+ CellFrame->{{0, 0}, {0, 3}},
+ ShowCellBracket->False,
+ CellMargins->{{0, 0}, {1, 1}},
+ CellElementSpacings->{"CellMinHeight"->1},
+ CellFrameMargins->0,
+ CellFrameColor->RGBColor[0, 0, 1],
+ CellSize->{Inherited, 5}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"haplo", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<H\>\"", ",", "\"\<L\>\"", ",", "\"\<M\>\"", ",", "\"\<U\>\"", ",", 
+     "\"\<B\>\"", ",", "\"\<D\>\"", ",", "\"\<J\>\"", ",", "\"\<T\>\"", ",", 
+     "\"\<K\>\"", ",", "\"\<C\>\"", ",", "\"\<A\>\"", ",", "\"\<R\>\"", ",", 
+     "\"\<F\>\"", ",", "\"\<N\>\"", ",", "\"\<I\>\"", ",", "\"\<V\>\"", ",", 
+     "\"\<W\>\"", ",", "\"\<X\>\"", ",", "\"\<E\>\"", ",", "\"\<G\>\"", ",", 
+     "\"\<Q\>\"", ",", "\"\<Z\>\"", ",", "\"\<Y\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"haplo", "=", 
+   RowBox[{"{", 
+    RowBox[{"\"\<L1\>\"", ",", "\"\<L2\>\"", ",", "\"\<L3\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"haploSample", "=", 
+   RowBox[{"{", 
+    RowBox[{"50", ",", "50", ",", "50"}], "}"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6999142009101114`*^9, 3.699914235616948*^9}, {
+   3.699914494894294*^9, 3.6999145064892664`*^9}, 3.6999147189022923`*^9, {
+   3.699917568753446*^9, 3.6999175719569197`*^9}, {3.699917740260708*^9, 
+   3.699917748824109*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SeedRandom", "[", "12345", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"filteredHaplo", " ", "=", " ", 
+   RowBox[{"Table", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Select", "[", 
+      RowBox[{"haplometa", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"haplo", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "==", 
+           RowBox[{"StringTake", "[", 
+            RowBox[{
+             RowBox[{"#", "[", 
+              RowBox[{"[", 
+               RowBox[{"5", ",", "3"}], "]"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", 
+               RowBox[{"Min", "[", 
+                RowBox[{
+                 RowBox[{"StringLength", "@", 
+                  RowBox[{"haplo", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}]}], ",", 
+                 RowBox[{"StringLength", "[", 
+                  RowBox[{"#", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"5", ",", "3"}], "]"}], "]"}], "]"}]}], "]"}]}], 
+              "}"}]}], "]"}]}], ")"}], "&&", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"#", "[", 
+            RowBox[{"[", "4", "]"}], "]"}], ">", "16000"}], ")"}]}], "&"}]}], 
+      "]"}], "\[IndentingNewLine]", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "@", "haplo"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Dimensions", "[", "#", "]"}], "&"}], "/@", "filteredHaplo"}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"filteredHaplo", " ", "=", " ", 
+   RowBox[{"Table", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"RandomSample", "[", 
+      RowBox[{
+       RowBox[{"filteredHaplo", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], ",", 
+       RowBox[{"haploSample", "[", 
+        RowBox[{"[", "i", "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "@", "haplo"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Dimensions", "[", "#", "]"}], "&"}], "/@", "filteredHaplo"}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"accIDs", "=", 
+   RowBox[{"Flatten", "@", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"filteredHaplo", "[", 
+       RowBox[{"[", 
+        RowBox[{"i", ",", ";;", ",", "3"}], "]"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "@", "filteredHaplo"}]}], "}"}]}], "]"}]}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.699914359426799*^9, 3.6999144409823647`*^9}, {
+  3.699914514411981*^9, 3.699914525381806*^9}, {3.699914696509307*^9, 
+  3.6999147060415635`*^9}, {3.6999148905922766`*^9, 3.6999148961084857`*^9}, {
+  3.699917150842394*^9, 3.699917184236554*^9}, {3.6999172429115477`*^9, 
+  3.6999173070276756`*^9}, {3.699917587614812*^9, 3.6999176304630775`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"685", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"874", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1137", ",", "5"}], "}"}]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.6999146674124355`*^9, {3.6999147068540945`*^9, 3.6999147208555408`*^9}, 
+   3.6999148989368253`*^9, 3.699917203160411*^9, {3.6999172548189573`*^9, 
+   3.699917322701116*^9}, {3.6999175615651865`*^9, 3.6999175751759977`*^9}, {
+   3.6999176093514757`*^9, 3.6999176317913427`*^9}, 3.6999177520588274`*^9, 
+   3.69991806130132*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"50", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"50", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"50", ",", "5"}], "}"}]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.6999146674124355`*^9, {3.6999147068540945`*^9, 3.6999147208555408`*^9}, 
+   3.6999148989368253`*^9, 3.699917203160411*^9, {3.6999172548189573`*^9, 
+   3.699917322701116*^9}, {3.6999175615651865`*^9, 3.6999175751759977`*^9}, {
+   3.6999176093514757`*^9, 3.6999176317913427`*^9}, 3.6999177520588274`*^9, 
+   3.6999180613169465`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"newDir", "=", "\"\<ref_pairwise_l1_l2_l3\>\""}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"CGR", " ", "READ"}], "-", "BUILD"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+  RowBox[{"Needs", "[", "\"\<GenResearch`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"!", 
+     RowBox[{"FileExistsQ", "[", "newDir", "]"}]}], ",", 
+    RowBox[{"CreateDirectory", "[", "newDir", "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+  RowBox[{"cgrOrder", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<A\>\"", ",", "\"\<C\>\"", ",", "\"\<G\>\"", ",", "\"\<T\>\""}], 
+    "}"}]}], ";", 
+  RowBox[{"k", "=", "9"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"curFileNamesOrder", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"#", "<>", "\"\<.fasta\>\""}], "&"}], "/@", "accIDs"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<cgrFileOrder.txt\>\"", ",", "curFileNamesOrder"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"!", 
+     RowBox[{"FileExistsQ", "[", "\"\<fasta\>\"", "]"}]}], ",", 
+    RowBox[{"CreateDirectory", "[", "\"\<fasta\>\"", "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Table", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"srcFile", "=", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<allfiles\>\"", 
+         ",", 
+         RowBox[{"curFileNamesOrder", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"destFile", "=", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"NotebookDirectory", "[", "]"}], ",", "newDir", ",", 
+         "\"\<fasta\>\"", ",", 
+         RowBox[{"curFileNamesOrder", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"!", 
+        RowBox[{"FileExistsQ", "[", "destFile", "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"CopyFile", "[", 
+         RowBox[{"srcFile", ",", "destFile"}], "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", "1", ",", 
+      RowBox[{"Length", "@", "curFileNamesOrder"}]}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "newDir", ",", 
+      "\"\<fasta\>\""}], "}"}], "]"}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", 
+    RowBox[{"AbsoluteTiming", "[", 
+     RowBox[{
+      RowBox[{"Monitor", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"allCGRs", " ", "=", " ", 
+          RowBox[{"{", "}"}]}], ";", " ", 
+         RowBox[{"flnames", " ", "=", "curFileNamesOrder"}], ";", "\n", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"i", " ", "=", " ", "1"}], ",", " ", 
+           RowBox[{"i", " ", "\[LessEqual]", " ", 
+            RowBox[{"Length", "[", "flnames", "]"}]}], ",", " ", 
+           RowBox[{"i", "++"}], ",", " ", "\n", "\t", 
+           RowBox[{
+            RowBox[{"nextNewCGR", " ", "=", " ", 
+             RowBox[{"linearCGRgrayscale", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Import", "[", 
+                 RowBox[{"flnames", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", " ", "cgrOrder", ",", 
+               " ", "k"}], "]"}]}], ";", "\n", "\t", 
+            RowBox[{"AppendTo", "[", 
+             RowBox[{"allCGRs", ",", " ", "nextNewCGR"}], "]"}], ";"}]}], 
+          "\n", "]"}], ";"}], "\n", ",", "\n", 
+        RowBox[{"TableForm", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"StringJoin", "[", 
+            RowBox[{"\"\<Reading file: \>\"", ",", " ", 
+             RowBox[{"ToString", "[", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", 
+                RowBox[{"Length", "[", "flnames", "]"}]}], "}"}], "]"}], ",", 
+             " ", "\"\< - \>\"", ",", " ", 
+             RowBox[{"flnames", "[", 
+              RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", " ", "\n", 
+           RowBox[{"ProgressIndicator", "[", 
+            RowBox[{
+             RowBox[{"Dynamic", "[", "i", "]"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", " ", 
+               RowBox[{"Length", "[", "flnames", "]"}]}], "}"}]}], "]"}]}], 
+          "}"}], "]"}]}], "]"}], ";", "\n", 
+      RowBox[{"\"\<reading \>\"", "<>", 
+       RowBox[{"ToString", "[", 
+        RowBox[{"i", "-", "1"}], "]"}], "<>", "\"\< files\>\""}]}], "]"}], 
+    "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+   RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+   RowBox[{"Put", "[", 
+    RowBox[{
+     RowBox[{"Compress", "@", "allCGRs"}], ",", "\"\<allCGRs.dat\>\""}], 
+    "]"}], ";", 
+   RowBox[{"Print", "[", 
+    RowBox[{"Dimensions", "@", "allCGRs"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Dynamic", "[", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", "j"}], "}"}], "]"}], "]"}], ";", 
+  RowBox[{"distMat", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"-", "1"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "@", "allCGRs"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", 
+       RowBox[{"Length", "@", "allCGRs"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Table", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"distMat", "[", 
+       RowBox[{"[", 
+        RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+      RowBox[{"ApproxInfoDist", "[", 
+       RowBox[{
+        RowBox[{"allCGRs", "[", 
+         RowBox[{"[", "i", "]"}], "]"}], ",", 
+        RowBox[{"allCGRs", "[", 
+         RowBox[{"[", "j", "]"}], "]"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"distMat", "[", 
+       RowBox[{"[", 
+        RowBox[{"j", ",", "i"}], "]"}], "]"}], "=", 
+      RowBox[{"distMat", "[", 
+       RowBox[{"[", 
+        RowBox[{"i", ",", "j"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]",
+     ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", "1", ",", 
+      RowBox[{"Length", "@", "allCGRs"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", "i", ",", 
+      RowBox[{"Length", "@", "allCGRs"}]}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";", 
+   RowBox[{"SetDirectory", "[", "newDir", "]"}], ";", 
+   RowBox[{"Put", "[", 
+    RowBox[{
+     RowBox[{"Compress", "@", "distMat"}], ",", "\"\<distMat.dat\>\""}], 
+    "]"}], ";", 
+   RowBox[{"Print", "[", 
+    RowBox[{"Dimensions", "@", "distMat"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"filteredDistances", "=", "distMat"}], ";"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"mds", " ", "call"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "\"\<go for mds\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"AbsoluteTiming", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"mdsres", "=", 
+     RowBox[{"mds", "[", 
+      RowBox[{"filteredDistances", ",", "8", ",", "2"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"pts", "=", 
+     RowBox[{"mdsres", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<mds returned coord's for \>\"", ",", 
+      RowBox[{"Length", "[", "pts", "]"}], ",", "\"\< points.\>\""}], "]"}], 
+    ";", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<First 10 Eigenvalues=\>\"", ",", 
+      RowBox[{"Take", "[", 
+       RowBox[{
+        RowBox[{"mdsres", "[", 
+         RowBox[{"[", "3", "]"}], "]"}], ",", 
+        RowBox[{"Min", "[", 
+         RowBox[{"5", ",", 
+          RowBox[{"Length", "[", "pts", "]"}]}], "]"}]}], "]"}]}], "]"}], ";",
+     "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{
+      RowBox[{"mdsres", "[", 
+       RowBox[{"[", "2", "]"}], "]"}], "//", "MatrixForm"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", "\"\<finished mds\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", "scaling", " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsOld", "=", "pts"}], ";", 
+  RowBox[{"ptsToBeScaled", "=", 
+   RowBox[{"Transpose", "[", "pts", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ptsX", "=", 
+   RowBox[{"ptsToBeScaled", "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+  RowBox[{"ptsY", "=", 
+   RowBox[{"ptsToBeScaled", "[", 
+    RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+  RowBox[{"ptsZ", "=", 
+   RowBox[{"ptsToBeScaled", "[", 
+    RowBox[{"[", "3", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsXScaled", "=", 
+   RowBox[{"Rescale", "[", 
+    RowBox[{"ptsX", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Min", "[", "ptsX", "]"}], ",", 
+       RowBox[{"Max", "[", "ptsX", "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsYScaled", "=", 
+   RowBox[{"Rescale", "[", 
+    RowBox[{"ptsY", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Min", "[", "ptsY", "]"}], ",", 
+       RowBox[{"Max", "[", "ptsY", "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsZScaled", "=", 
+   RowBox[{"Rescale", "[", 
+    RowBox[{"ptsZ", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Min", "[", "ptsZ", "]"}], ",", 
+       RowBox[{"Max", "[", "ptsZ", "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ptsScaled", "=", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"ptsXScaled", ",", "ptsYScaled", ",", "ptsZScaled"}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pts", "=", "ptsScaled"}], ";", 
+  RowBox[{"ptsMST3D", "=", "ptsScaled"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", "\"\<finished scaling\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"graphicsofpts3d", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"tmp", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"filteredHaplo", ",", "1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"i", "=", "1"}], ",", 
+     RowBox[{"i", "\[LessEqual]", 
+      RowBox[{"Length", "@", "accIDs"}]}], ",", 
+     RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", " ", 
+     RowBox[{
+      RowBox[{"AppendTo", "[", 
+       RowBox[{"graphicsofpts3d", ",", "\[IndentingNewLine]", 
+        RowBox[{"Annotation", "[", 
+         RowBox[{
+          RowBox[{"Text", "[", 
+           RowBox[{"\"\<\>\"", ",", 
+            RowBox[{"pts", "[", 
+             RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"tmp", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], "\[IndentingNewLine]", ",", 
+          "\"\<Mouse\>\""}], "]"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"x", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Dimensions", "[", "#", "]"}], "&"}], "/@", "filteredHaplo"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"t", "=", 
+   RowBox[{"x", "[", 
+    RowBox[{"[", 
+     RowBox[{";;", ",", "1"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"q", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{"t", "[", 
+        RowBox[{"[", "j", "]"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "1", ",", "i"}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "@", "t"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"x1", "=", 
+   RowBox[{
+    RowBox[{"Drop", "[", 
+     RowBox[{
+      RowBox[{"Prepend", "[", 
+       RowBox[{"q", ",", "0"}], "]"}], ",", 
+      RowBox[{"-", "1"}]}], "]"}], "+", "1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"x2", "=", "q"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ranges", "=", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"x1", ",", "x2"}], "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"newpts", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Take", "[", 
+       RowBox[{"pts", ",", "#"}], "]"}], "&"}], "/@", "ranges"}]}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"ListPointPlot3D", "[", 
+      RowBox[{"newpts", 
+       RowBox[{"(*", "pts", "*)"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "Automatic"}], ",", 
+       RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+       RowBox[{"BoxRatios", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", " ", "1", ",", " ", "1"}], "}"}]}]}], "]"}], ",", 
+     RowBox[{"Graphics3D", "[", "graphicsofpts3d", "]"}]}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"Dynamic", "[", 
+    RowBox[{
+     RowBox[{"mousepos", "=", 
+      RowBox[{"MouseAnnotation", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"info", "=", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<ID\>\"", ",", "\"\<Organism\>\"", ",", "\"\<Len\>\"", ",", 
+        "\"\<Acc\>\"", ",", "\"\<Haplo\>\""}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"info", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Style", "[", 
+         RowBox[{"#", ",", "Black", ",", "Bold", ",", "Medium"}], "]"}], 
+        "&"}], "/@", "info"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"mousepos", "===", "Null"}], ",", ",", 
+       RowBox[{"disp", "=", 
+        RowBox[{"{", 
+         RowBox[{"info", ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"ToString", "[", 
+             RowBox[{"mousepos", "[", 
+              RowBox[{"[", "1", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"ToString", "[", 
+             RowBox[{"mousepos", "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"ToString", "[", 
+             RowBox[{"mousepos", "[", 
+              RowBox[{"[", "3", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"ToString", "[", 
+             RowBox[{"mousepos", "[", 
+              RowBox[{"[", "4", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"mousepos", "[", 
+             RowBox[{"[", "5", "]"}], "]"}]}], "}"}]}], "}"}]}]}], "]"}], ";",
+      "\[IndentingNewLine]", 
+     RowBox[{"Grid", "[", 
+      RowBox[{
+       RowBox[{"Transpose", "[", "disp", "]"}], ",", 
+       RowBox[{"Alignment", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Left", ",", "Left"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"Center", ",", "Center"}], "}"}]}], "}"}]}], ",", 
+       RowBox[{"Background", "\[Rule]", "LightBlue"}], ",", 
+       RowBox[{"ItemSize", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Scaled", "[", ".2", "]"}], ",", 
+           RowBox[{"Scaled", "[", ".8", "]"}]}], "}"}], "}"}]}], ",", 
+       RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}]}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.593524382339702*^9, 3.5935244108133307`*^9}, {
+   3.5935247629389086`*^9, 3.5935247672413683`*^9}, 3.5935396560638337`*^9, 
+   3.595082886184173*^9, {3.595352406508503*^9, 3.5953524158750906`*^9}, {
+   3.595353773216926*^9, 3.595353781951719*^9}, {3.598142662426607*^9, 
+   3.598142664724547*^9}, {3.6003573854105573`*^9, 3.6003573866263*^9}, {
+   3.601608289459963*^9, 3.6016083140033665`*^9}, {3.601608445928912*^9, 
+   3.6016084725984373`*^9}, {3.6016085520669827`*^9, 3.601608618405777*^9}, {
+   3.601608708339921*^9, 3.60160872562891*^9}, {3.601611377493966*^9, 
+   3.6016114004572067`*^9}, {3.6016114652909203`*^9, 3.60161148195175*^9}, {
+   3.60161164673244*^9, 3.6016116477308416`*^9}, {3.601614937069599*^9, 
+   3.6016149448020415`*^9}, {3.6016152179776664`*^9, 
+   3.6016152300643578`*^9}, {3.6016152940390167`*^9, 
+   3.6016153288100057`*^9}, {3.601615521656036*^9, 3.6016155662145844`*^9}, {
+   3.601646761479369*^9, 3.6016467948932805`*^9}, {3.601646849297392*^9, 
+   3.6016468533236227`*^9}, {3.6016912031341095`*^9, 
+   3.6016912224352136`*^9}, {3.6031184966079955`*^9, 3.603118502524609*^9}, {
+   3.6350869257021914`*^9, 3.6350869345536404`*^9}, {3.640286811083008*^9, 
+   3.640286812392578*^9}, {3.6403533335009766`*^9, 3.6403533336884766`*^9}, {
+   3.6403906788085938`*^9, 3.6403906801835938`*^9}, {3.640739373598633*^9, 
+   3.6407393737626953`*^9}, 3.6958185730947266`*^9, {3.69929846785679*^9, 
+   3.699298475096438*^9}, {3.6992985976116858`*^9, 3.699298612637802*^9}, {
+   3.699298932871193*^9, 3.699298937940281*^9}, {3.699298978893547*^9, 
+   3.6992989850246487`*^9}, {3.6992990597460613`*^9, 3.699299089071498*^9}, {
+   3.699299159380022*^9, 3.69929916195391*^9}, {3.699299400220055*^9, 
+   3.699299402384378*^9}, {3.6992994787047577`*^9, 3.699299500990241*^9}, {
+   3.6992995370347157`*^9, 3.699299538986329*^9}, {3.699299661075238*^9, 
+   3.699299676030589*^9}, {3.699914955192848*^9, 3.6999150802997932`*^9}, {
+   3.6999151250857625`*^9, 3.6999151557607946`*^9}, {3.699915191670908*^9, 
+   3.699915264151143*^9}, {3.699915328642316*^9, 3.69991544993636*^9}, {
+   3.699917440729193*^9, 3.699917533526515*^9}, {3.6999176435404763`*^9, 
+   3.6999176453843946`*^9}, {3.699917756227494*^9, 3.699917756665036*^9}, {
+   3.69991819945652*^9, 3.6999182167864723`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"13.082695803224727`", ",", "\<\"reading 150 files\"\>"}], 
+  "}"}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999182345383477`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"150", ",", "512", ",", "512"}], "}"}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999182512901096`*^9}],
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[{$CellContext`i, $CellContext`j}, StandardForm],
+  ImageSizeCache->{63., {3., 10.}}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999182512901096`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"150", ",", "150"}], "}"}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183082882853`*^9}],
+
+Cell[BoxData["\<\"go for mds\"\>"], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.699918308303912*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"mds returned coord's for \"\>", "\[InvisibleSpace]", "150", 
+   "\[InvisibleSpace]", "\<\" points.\"\>"}],
+  SequenceForm["mds returned coord's for ", 150, " points."],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183084132996`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"First 10 Eigenvalues=\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.13744676205078454`", ",", "0.04262012957060705`", ",", 
+     "0.028968520000484107`", ",", "0.01389725664058518`", ",", 
+     "0.012945357799831601`"}], "}"}]}],
+  SequenceForm[
+  "First 10 Eigenvalues=", {0.13744676205078454`, 0.04262012957060705, 
+   0.028968520000484107`, 0.01389725664058518, 0.012945357799831601`}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183084132996`*^9}],
+
+Cell[BoxData[
+ TagBox["0",
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183084289246`*^9}],
+
+Cell[BoxData["\<\"finished mds\"\>"], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183084289246`*^9}],
+
+Cell[BoxData["\<\"finished scaling\"\>"], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183084289246`*^9}],
+
+Cell[BoxData[
+ Graphics3DBox[{{
+    {RGBColor[0.3315753, 0.4561011, 0.6388182], Point3DBox[CompressedData["
+1:eJx1k2tUkwUcxpcIU6KDrAw17yAXA+NyvCSDPyaSYFGpgKACDmwkLAkhUDgg
+c4AJeQsI4aABQzk4ONwk2Mi/sjlgAmMXJgblDcbG9r6viRdAXXk65Ic6Pec8
+X54PzznP75xnBevg9v2zaDSaxyubvXJy+b3L2RkkFMsDY6Mf1YN5Wb103UMC
+H7Irj04OGeFAVUIx59k1eB7LzLNdTCF/U6VV4w8G8N0sHmn/lA9bqo8azLsJ
+rNpXF7b+8Bh0qbenHVFWY8aS/eraurH/5Jkz+YETtolr643wYg+d9tj9OnQ+
+0QVc+JPAPiuPDyVzCOhtO1MYcFIJCxoENyY0BPotD3wx2ERAs11UzJyTMgjZ
+Khk2RlIYXBFmsOZS8LkkUrSlVAJ0xkjtZxoSn6yKEA46k+AWkbFycJ0YRvm5
+DmVTBBp7O8TKKiPwvXiHFjTXg+bugGarN4Gu5e988MX0AJw2mIb5DBkqujhd
+J5l6KBViS9I4AQXUUfrsgHrQB8otll4iMWQ0qsDUpoLq85GeVh/J0R1O2y3V
+GoDl3KVyP6gAntexm8NXe3HyD8uX45PjsCzoti6BpQSfRy5USF0vmspPqVNa
+9FDNbvpl8poBBPu61072I1TksoXWTgQyqE6XS10E9LGcp5cSEphlkzCxyI1A
+XpI0v+mpEvyucpnpdWKk/a2HEBx6sUn3VAu+AXbOZoVpIGfm512JeoBnwvTZ
+XJURWqbeTrybrYBpppXb3E4j+mTRPMW1StiqSwlnGHpxjd7O3rzUAA+sBwK/
+OqWCXVG2Mr9WGfozOmyK/Qm4PcJ0a2hUwbfhyW03XXpw+P4OFXM+AfIH6229
+q8dg3s+uv61Mq0H71Bj1XsUYTvcbUhZZkKCGwVQblgiyfIh7Yx0Urr6yIdIk
+UsMJvYI/b1sPWmzP8R54OQ4beCulcRY6aN70zN9ncyOk5DjcncjUYdTq+b5t
+d7Qw/lPmio1fi2FqI2/EPt6IDmmhvJ1LdCDhKbrbQoTg6sH1PRSkw3Tz43pN
+MwnHGS6X2TdFMMMHC8bJQvZGAhbAN55VQ61wak/mOXiPQm5w9HlCREJNa/+U
+j5MUchpMtdscSSzZe5X9eM8oFMzmXI+raYYBTwfNWUv9a96J9HQISJLCr1/G
+VLJukDixWMrw2KGCPoflQLeWo1NijO1ouQ6yLsQdKblOAN9eWJ6X1ArIKagW
+FFF42bvNOjXYCKlqv9tvfd8EZbuTpxt+N2JRl2Xu4V4dCObeV8bel0BEfd+U
+Vj6GpnUTTfQfCWh3fuPZmu+EcPHsKu6ddBJL9e8q3mdQIGtfaNWRJ4aKyBUH
+ZYPk612Cf+0q2Lysroyjhf7hWZaaokLk99T4up7VYrpZRO0nASTwbFjt7kEi
+uMWwtPQTUBi/+01VSJIKTAmht6Id5SimivIdE/XwPNvwsVegGnZmjAz5+8hx
+YRQR5vTqz//Xs6v72Nw0jgLCd+YP02k9eCK+JDuProV/OMTOcCid4ZDLHan0
+PEcBX0jRqy5JgbHLhiOoIfEvmfOAug==
+      "]]}, 
+    {RGBColor[0.7926498, 0.5499369, 0.1278459], Point3DBox[CompressedData["
+1:eJw1lHtUzHkYxsctZZ1Z2WIkRaeLVC6l2IrXjkZTkUmsSjZEQlGrdRTCsrux
+2xKFpt0mpVyzurA71Xq7jTqczWWs1Ew185vb7/f7zjRZlpTY2T1n33Oe8/77
+Oc/znGfWlj1rto3mcDi+Fo3590sW1Ny7T6MurSHL64kelphGJFJajSUD1kPD
+EQTDiy6kcCpoqGuWf+Rlo0XH3b8fCBawmHZ/lAPPtQ9iTFX2V490YYGXuC18
+HIPtWZXfMSkGyLMSVCx7RGHcqW1R8a0ETx/3EP9US6DHYVxd8UEKS635zk5x
+LPbpkxovZxuA42wvL1upwfrbM1f/tp/Fo38E/ujL0lC1NpZwbDX4+S6eUuTN
+YkWL8TRtp4aXPe+Drp3twoVZgdehhWDeY6Vk6SQC56ICQ+b0qrHGttAjIZpg
+QaR9ulDLQrTQVJ+eTGG5TjqWiTJimFtJ8/IENbhWuYWsE3djqdz/eXA4wcXj
+4xSKaCN8KdVxre20+Hjfpde+mUZs/eJyYl4zgb75I/n86RrkpoQkTDpJo0ts
+6/a9zgYIObLrBO89hZz/bgDF1WP2Ks9qIVLC35PCavFM0XCFJNaIV94ssQ11
+okBYckMZE63C1S6F6Sc9WXTcNMsmqVAJqdVT+rm0EpP2Vrsn61iUnv8wvdeZ
+ga0hZ1Nef6bFpL6fx40/R/BYfXjzwjwCjcaO5TsmW3ieR8nRkeCmCLuX+UcZ
+2FwbuvLKAIWT1ymXhRuM6C59kOgkMYHgbaWgK59C0aFcPdXJosR8KTshm4ZS
+/pIDF8M0GLS1hKfbwuBXy1qSd6w3gG5UesCMAAunw73l/qv70T3jgmuTRA/K
+50n52TwtFg9WT2xyIth980bFyAkG3GWeaH+bwrCi3CCr0QS5VwNunWhkwEo9
+NWqKjwajXO1vrvVgUbhg/jd3/Wgo48qnlrMU3qo1XezuIPjwrjR60F8N6Tnn
+493D+nBO3Sep3okMRm6ATqWAhsCPs/i1aRSyh78tPhRjxjrnA6q3vxhghU2K
+cAKocVrwkLfyL/P/OUBFWpHAbOE8dvBpaOnXBEX2G9p/rSTwIH/lrnJCYZb7
+YcdGPkFxzijHPQoW0mLcjMeCtLizzFRXlcniGu5xye7bDBTkSy5KbCl0fDTx
+RYalz+vFGuNsHzXwZzSMjRWpcID3YfhCHsFr04u8E3tZ4G1MX+FUTKHMd+7T
+TC5Bv9jOP98NGuAMKEQu8zRY2Rsx+EzG4PWa1O6qQT0oeNpimSUXx9Aus9BM
+cPfE/pJcWT/E77sjezxDi24zO70d/IxYOM/v8v45/WB+tjP15VgdZnmqzZ7z
+CcqDhmT7O2jocbvVFtFL4fubK8yqRSzSvnPfWfkywA99tahgsRbvB0hTt+eZ
+0SeTeyrnBxoGyp+cFyksfaifxkaeNqEPWbXwitgEbWurcuc+VaNqfNqEwB6C
+Dg/9G8xLCdwZsYuRbdSgIqcmo/0Ji5PjbjjVbGbgpMh4qNZDgz1DlateiFl8
+1SAw26gYaB+wutu0jULJhJGpbAeNtsz3yeSFHqC7WBgsp3D21k/bVJY9+ZtX
+80aawcCjxaFNDy0+u5TdKR+OYbDDRt8a32IAL+d51teG1fgPYaKXZA==
+      "]]}, 
+    {RGBColor[0.5041629000000001, 0.6224121, 0.1753965], 
+     Point3DBox[CompressedData["
+1:eJxlk38w1HkcxrcfknDRltJcly2dKN3ZU1NHTdKskjpciLqIHHcpWvqhS3Jo
+/RhCNWoJqZZNaSsV/XrO5iq5fqHlGtlkv5/v97vf3Rsqtcfidm7uv3vPPP89
+M8/M63negsj4wOixPB5PaNI4kz5PTfccVhF82nUpJb+KIPLBiHzvYw1eXnsx
+Rx1Hozm17YJLPYNk63dMTbIGPb6x+U9yCNL0p1R4Q+FNSI/mbjqFELEESjsG
+uX/M72y5qoV6R7CF2T2CNUJjljiIA+/f68Ml28CFK7q1eFrC3my4RsMQ7fdo
+OFMHN6WxJUpAMLs7n5s6hkCUNxpZ0KXF6K2sPrO/aSwXvLQbvE8QkWCTbVVN
+sIkfv3LiOwoNG2N2lq5nYedyfsSzhYW5n93RqiCCufuaL8QeY7Esoa6pq0UP
+i3PLsgKncMh+WWkeuo2G76xBp48qBlNXdy7+2o+gpNg479yPNA6LLDgzlsEv
+9zKs4xYQ3KrODp9cxiDIyWeTqwWHiwWOzx6tIji4f5tE7UjjzIH2D6otekxL
+LYmQnWXgVFM+7aSSwIrJ5AfWv0V5bVXaqUMapM8ovO4VxGDNiP1qvVIL1fpX
+CdUdBDrHcT7d5hQCw2VbF6hpNG5u7LrvQTDj8pf3hEcYnMlWUed0DDrTwm0e
+v6YQtrD4TeINForE7gkZIgp3rUcVT4w03M+URihms5AkWLiGJtOwmuEX96Ce
+IFaybNXBKxSi1/kGBF5g0FxWmrmxkqDytahULtaCd9z13fiTerQtOns424VB
+j8MUL1cfBvuTzxuic/XIShKpRSMEnkGt+9wWM3i79UT70BgdMrOUTw8aKPy8
+JdtHMp2BTdHS2iZvPVStu32iS2g8PzawhDXxufnMUBMh56AdLU60XUpjj7/B
+RhhAoTdJammr7EXDge8FP3zohfPMh5M6ehgM7zrROkbKokJua9/VT2F8XrvH
+HRuCAYW3vr2GA5nYnjfCZ1BfkDH5dAoD6dyMip+GGAzk+KYLX1DYmuPvrhWz
+cPf3DphvqUNKqHhq3BfU//wf//OLTqdvH+XTqHQLYbzWsCB1kfzoiQRvpf5t
+VgcoFEZV/KbhGATnCm6HmvoYpN6/Em829Ws/xIsRcMiX7SiY4M2gvKVj75P3
+BMI7EmrLdj2ExL43p5FB4eUV6y7yOJgbzPPKS/5CWl2th/NaDqNVdNyhFILp
+g6VR5UdN+6t2Wv+hQYOKr/hJ3vEsrN2Cw8bu5HAkqyP4eRiN2TqjvfI8waPr
+/ZsNd2h85mj0ZC0J5gyYm3F/svh0rX9D2TCB4oZ1W66QRvyReXWpzhTqPDYa
+29eyKKppXBJg2lfqzUlsuQOLw0OlMU9vm/hYfzen7xmNE+55pxM3sODf8Ntp
+/JXDiqaQhkOmfwg1Fkkfywjup1uqo37noOuPdZkuYtD60CiV15o4tYVLR2w4
+OHg2SNSevVgpCJulqqawIzmprNmZ4Oy2guGMmTSulgQNJn3LYq94WP7KSw/x
+8rvq7Ucp7M7UuHa+pyG7smCPWyKLlbEaxS1TXl9ZgFxryomRyYpzRFpI9zct
++kZB8A/f9sYA
+      "]]}}, {
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9529445988710409, 
+      0.06619855209538483, -0.9355729942953138}],
+     Annotation[#, {
+      8766, "Homo sapiens isolate H020 mitochondrion, complete genome", 
+       "HM771131.1", 16566, {"HM771131.1", 90, "L1c", "L1c1a1a1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9018518936602486, 
+      0.13255090659485386`, -0.9721791953518556}],
+     Annotation[#, {
+      8814, "Homo sapiens isolate H069 mitochondrion, complete genome", 
+       "HM771179.1", 16565, {"HM771179.1", 96, "L1c", "L1c1a2a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8617792364912487, 
+      0.03965559284700371, -0.9307889556560062}],
+     Annotation[#, {
+      28035, "Homo sapiens isolate HGDP00477 mitochondrion, complete genome", 
+       "KJ445775.1", 16566, {"KJ445775.1", 89, "L1c", "L1c1a2a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {
+      0.7335469009004113, -0.04848082309164564, -0.7400731228198507}],
+     Annotation[#, {
+      27500, "Homo sapiens isolate NAB760 mitochondrion, complete genome", 
+       "KJ185522.1", 16565, {"KJ185522.1", 90, "L1c", "L1c3b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {
+      0.7335469009004113, -0.04848082309164564, -0.7400731228198508}],
+     Annotation[#, {
+      27628, "Homo sapiens isolate ZAM350 mitochondrion, complete genome", 
+       "KJ185650.1", 16565, {"KJ185650.1", 90, "L1c", "L1c3b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8965098598822128, 
+      0.134336948408169, -0.9374538844637578}],
+     Annotation[#, {
+      5129, "Homo sapiens isolate HGDP00458 mitochondrion, complete genome", 
+       "EU597489.1", 16567, {"EU597489.1", 94, "L1c", "L1c1a2a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9073201291179431, 
+      0.28993453604098535`, -0.9324892865020358}],
+     Annotation[#, {
+      27551, "Homo sapiens isolate ZAM401 mitochondrion, complete genome", 
+       "KJ185573.1", 16569, {"KJ185573.1", 98, "L1c", "L1c2a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9282040526895874, 
+      0.2074594965090718, -0.9804596244669124}],
+     Annotation[#, {
+      28059, "Homo sapiens isolate HGDP01413 mitochondrion, complete genome", 
+       "KJ445799.1", 16571, {"KJ445799.1", 95, "L1c", "L1c2a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9846267315561571, 
+      0.1609885373032136, -0.9636610409075396}],
+     Annotation[#, {
+      27900, "Homo sapiens isolate ZAM617 mitochondrion, complete genome", 
+       "KJ185922.1", 16566, {"KJ185922.1", 102, "L1c", "L1c2b1b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9426082267756885, 
+      0.15011121448763864`, -0.9367204430137944}],
+     Annotation[#, {
+      27445, "Homo sapiens isolate ZAM253 mitochondrion, complete genome", 
+       "KJ185467.1", 16568, {"KJ185467.1", 99, "L1c", "L1c2b1b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8952421019989152, 
+      0.06524803943851382, -0.9137310215001218}],
+     Annotation[#, {
+      28030, "Homo sapiens isolate HGDP00473 mitochondrion, complete genome", 
+       "KJ445770.1", 16566, {"KJ445770.1", 91, "L1c", "L1c1a2b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.34340314481461826`, -0.20369396963891662`, 
+      0.7886423029542816}],
+     Annotation[#, {
+      10545, "Homo sapiens isolate PG080 mitochondrion, complete genome", 
+       "JN214460.1", 16567, {"JN214460.1", 80, "L1b", "L1b1a16"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9348701066317803, 
+      0.06361413176722258, -0.9579000599863693}],
+     Annotation[#, {
+      27460, "Homo sapiens isolate NAB856 mitochondrion, complete genome", 
+       "KJ185482.1", 16566, {"KJ185482.1", 98, "L1c", "L1c2b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.30822720041358787`, -0.24420311459038158`, 
+      0.8718405432318602}],
+     Annotation[#, {
+      2765, "Homo sapiens isolate L1b-1-08 mitochondrion, complete genome", 
+       "DQ304912.1", 16568, {"DQ304912.1", 81, "L1b", "L1b1a3a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.27241178209137307`, -0.232387160655403, 
+      0.842885488723879}],
+     Annotation[#, {
+      10993, "Homo sapiens isolate BF175 mitochondrion, complete genome", 
+       "JQ044868.1", 16566, {"JQ044868.1", 79, "L1b", "L1b1a+189"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.28725836505074825`, -0.2318829219674558, 
+      0.8035239364226638}],
+     Annotation[#, {
+      27536, "Homo sapiens isolate ZAM185 mitochondrion, complete genome", 
+       "KJ185558.1", 16566, {"KJ185558.1", 83, "L1b", "L1b2a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8673061089605101, 
+      0.12428237260008385`, -0.9111403122626494}],
+     Annotation[#, {
+      8852, "Homo sapiens isolate H107a mitochondrion, complete genome", 
+       "HM771217.1", 16565, {"HM771217.1", 91, "L1c", "L1c1a2a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9307437777165168, 
+      0.16348635878491397`, -0.9121222262042752}],
+     Annotation[#, {
+      27547, "Homo sapiens isolate ZAM297 mitochondrion, complete genome", 
+       "KJ185569.1", 16567, {"KJ185569.1", 95, "L1c", "L1c2b1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.2963074564702952, -0.15376236872315208`, 1.}],
+     Annotation[#, {
+      11014, "Homo sapiens isolate BF190 mitochondrion, complete genome", 
+       "JQ044889.1", 16566, {"JQ044889.1", 81, "L1b", "L1b1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.7176402577194759, 
+      0.006733906122649735, -0.6055553174536729}],
+     Annotation[#, {
+      18324, "Homo sapiens isolate Zam305 mitochondrion, complete genome", 
+       "JX303797.1", 16557, {"JX303797.1", 86, "L1c", "L1c5"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.900819074197715, 
+      0.27379618778641246`, -0.8992963732179355}],
+     Annotation[#, {
+      18309, "Homo sapiens isolate Zam183 mitochondrion, complete genome", 
+       "JX303782.1", 16567, {"JX303782.1", 99, "L1c", "L1c2a3a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.29185562115346275`, -0.23373631875421297`, 
+      0.8626733499398023}],
+     Annotation[#, {
+      27489, "Homo sapiens isolate NAB400 mitochondrion, complete genome", 
+       "KJ185511.1", 16566, {"KJ185511.1", 82, "L1b", "L1b1a+189"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.30562813098754144`, -0.2087484347127908, 
+      0.9148674342000696}],
+     Annotation[#, {
+      4399, "Homo sapiens isolate L349 mitochondrion, complete genome", 
+       "EU092715.1", 16570, {"EU092715.1", 81, "L1b", "L1b1a4a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.3077815028260154, -0.22011705928408148`, 
+      0.9088424804204709}],
+     Annotation[#, {
+      30195, "Homo sapiens isolate mtGHispNY0008 mitochondrion, complete \
+genome", "KM102097.1", 16567, {"KM102097.1", 81, "L1b", "L1b1a7a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {
+      0.7392869428141412, -0.05172070455487987, -0.7443074367799949}],
+     Annotation[#, {
+      18312, "Homo sapiens isolate Zam218 mitochondrion, complete genome", 
+       "JX303785.1", 16566, {"JX303785.1", 90, "L1c", "L1c3b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9382450430116756, 
+      0.10696515274344104`, -0.9925422108298819}],
+     Annotation[#, {
+      28039, "Homo sapiens isolate HGDP00479 mitochondrion, complete genome", 
+       "KJ445779.1", 16568, {"KJ445779.1", 91, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.3239742212197877, -0.2210408024582871, 
+      0.8434854699758609}],
+     Annotation[#, {
+      32092, "Homo sapiens isolate H088 haplogroup L1b1a6 mitochondrion, \
+complete genome", "KT819206.1", 16567, {"KT819206.1", 81, "L1b", "L1b1a6"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.7507838125058077, 
+      0.07133855087818725, -0.7656192186297649}],
+     Annotation[#, {
+      27380, "Homo sapiens isolate ZAM330 mitochondrion, complete genome", 
+       "KJ185402.1", 16565, {"KJ185402.1", 94, "L1c", "L1c3b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.7148100139250566, 
+      0.15180136333152144`, -0.8882011855328918}],
+     Annotation[#, {
+      28, "Homo sapiens mitochondrion, complete genome", "AF346987.1", 
+       16566, {"AF346987.1", 91, "L1c", "L1c1d1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.7535803398894572, 
+      0.10288582970817389`, -0.7595764408047835}],
+     Annotation[#, {
+      28057, "Homo sapiens isolate HGDP01091 mitochondrion, complete genome", 
+       "KJ445797.1", 16566, {"KJ445797.1", 89, "L1c", "L1c4b"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9595751343878614, 0.10857246331222303`, -1.}],
+     Annotation[#, {
+      8762, "Homo sapiens isolate H016 mitochondrion, complete genome", 
+       "HM771127.1", 16566, {"HM771127.1", 91, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9133794716247672, 
+      0.09710152154843532, -0.9720762250898519}],
+     Annotation[#, {
+      24872, "Homo sapiens isolate HGDP00455 mitochondrion, complete genome", 
+       "KF451019.1", 16567, {"KF451019.1", 90, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9604404538646778, 
+      0.1731032104302746, -0.9422968290651148}],
+     Annotation[#, {
+      27958, "Homo sapiens isolate ZAM404 mitochondrion, complete genome", 
+       "KJ185980.1", 16567, {"KJ185980.1", 97, "L1c", "L1c2b1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.6675970102541442, 
+      0.08072541687308138, -0.7825407202341191}],
+     Annotation[#, {
+      29795, "Homo sapiens isolate mtGAfrSC0001 mitochondrion, complete \
+genome", "KM101697.1", 16568, {"KM101697.1", 87, "L1c", "L1c3a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {1., 0.1754237709029059, -0.9615948859456822}],
+     Annotation[#, {
+      18338, "Homo sapiens isolate Zam341 mitochondrion, complete genome", 
+       "JX303811.1", 16568, {"JX303811.1", 98, "L1c", "L1c2b1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.3019528563822426, -0.24264612753204634`, 
+      0.7697625595934072}],
+     Annotation[#, {
+      27785, "Homo sapiens isolate gNAB149 mitochondrion, complete genome", 
+       "KJ185807.1", 16566, {"KJ185807.1", 79, "L1b", "L1b1a10"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9298832312606323, 
+      0.0955283422319036, -0.9871428768705569}],
+     Annotation[#, {
+      28040, "Homo sapiens isolate HGDP01085 mitochondrion, complete genome", 
+       "KJ445780.1", 16567, {"KJ445780.1", 90, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8854332263089665, 
+      0.07637106470504473, -0.9021844760671801}],
+     Annotation[#, {
+      25447, "Homo sapiens isolate HGDP01088 mitochondrion, complete genome", 
+       "KF451594.1", 16566, {"KF451594.1", 92, "L1c", "L1c1a2b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.7750823628941983, 
+      0.16315946862239394`, -0.7441286925363888}],
+     Annotation[#, {
+      28049, "Homo sapiens isolate HGDP01094 mitochondrion, complete genome", 
+       "KJ445789.1", 16567, {"KJ445789.1", 90, "L1c", "L1c4b"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9246862902307098, 
+      0.10365575342544892`, -0.9527432958535271}],
+     Annotation[#, {
+      4802, "Homo sapiens isolate L272 mitochondrion, complete genome", 
+       "EU273482.1", 16568, {"EU273482.1", 89, "L1c", "L1c1a1a1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9709681590823495, 
+      0.15270257559629946`, -0.9639637156023932}],
+     Annotation[#, {
+      27739, "Homo sapiens isolate NAB162 mitochondrion, complete genome", 
+       "KJ185761.1", 16568, {"KJ185761.1", 101, "L1c", "L1c2b1b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9604404538646778, 
+      0.17310321043027466`, -0.9422968290651148}],
+     Annotation[#, {
+      27651, "Homo sapiens isolate ZAM541 mitochondrion, complete genome", 
+       "KJ185673.1", 16567, {"KJ185673.1", 97, "L1c", "L1c2b1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {
+      0.7008808518240692, -0.02108320652106671, -0.7053438437491377}],
+     Annotation[#, {
+      19850, "Homo sapiens isolate C-58E mitochondrion, complete genome", 
+       "KC257338.1", 16568, {"KC257338.1", 88, "L1c", "L1c3b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9464476953581733, 
+      0.10666190003582271`, -0.9897785373765043}],
+     Annotation[#, {
+      4810, "Homo sapiens isolate L281 mitochondrion, complete genome", 
+       "EU273490.1", 16568, {"EU273490.1", 91, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.30397577867318293`, -0.24338958754277223`, 
+      0.7951848741426989}],
+     Annotation[#, {
+      11051, "Homo sapiens isolate BF291 mitochondrion, complete genome", 
+       "JQ044926.1", 16569, {"JQ044926.1", 76, "L1b", "L1b1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.3170307352393988, -0.24408803688946767`, 
+      0.8965036159888796}],
+     Annotation[#, {
+      18298, "Homo sapiens isolate Zam161 mitochondrion, complete genome", 
+       "JX303771.1", 16566, {"JX303771.1", 80, "L1b", "L1b1a3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9464476953581733, 
+      0.10666190003582271`, -0.9897785373765043}],
+     Annotation[#, {
+      28044, "Homo sapiens isolate HGDP00454 mitochondrion, complete genome", 
+       "KJ445784.1", 16568, {"KJ445784.1", 91, "L1c", "L1c1a1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.27230716637781915`, -0.21875093716576793`, 
+      0.6884210214078774}],
+     Annotation[#, {
+      18297, "Homo sapiens isolate Zam159 mitochondrion, complete genome", 
+       "JX303770.1", 16567, {"JX303770.1", 78, "L1b", "L1b2a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.8854332263089665, 
+      0.07637106470504451, -0.9021844760671799}],
+     Annotation[#, {
+      4807, "Homo sapiens isolate L278 mitochondrion, complete genome", 
+       "EU273487.1", 16567, {"EU273487.1", 92, "L1c", "L1c1a2b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {0.9874513817813558, 
+      0.17699110877534452`, -0.9583341722707266}],
+     Annotation[#, {
+      27866, "Homo sapiens isolate ZAM278 mitochondrion, complete genome", 
+       "KJ185888.1", 16567, {"KJ185888.1", 99, "L1c", "L1c2b1b1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7747529506568525, 
+      0.7131554982365996, -0.5596588253824063}],
+     Annotation[#, {
+      29794, "Homo sapiens isolate mtGAfrPA0003 mitochondrion, complete \
+genome", "KM101696.1", 16570, {"KM101696.1", 53, "L2a", "L2a1f"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8530254252905429, 
+      0.7702638741510353, -0.6261191588401609}],
+     Annotation[#, {
+      11091, "Homo sapiens isolate BF279 mitochondrion, complete genome", 
+       "JQ044966.1", 16568, {"JQ044966.1", 51, "L2a", "L2a1l1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.820951692275631, 
+      0.48657801189180017`, -0.39847781294493734`}],
+     Annotation[#, {
+      11230, "Homo sapiens isolate MAN1200 mitochondrion, complete genome", 
+       "JQ045105.1", 16567, {"JQ045105.1", 64, "L2c", "L2c1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7818960093003279, 
+      0.7320449495271868, -0.5879214522794475}],
+     Annotation[#, {
+      24743, "Homo sapiens isolate HGDP00134 mitochondrion, complete genome", 
+       "KF450890.1", 16570, {"KF450890.1", 54, "L2a", "L2a1f3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8677198018817578, 
+      0.8657973299815627, -0.5777124055101371}],
+     Annotation[#, {
+      2828, "Homo sapiens isolate L2a-6-08 mitochondrion, complete genome", 
+       "DQ304975.1", 16570, {"DQ304975.1", 58, "L2a", "L2a1a2a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8235006914622043, 
+      0.734210849556998, -0.6031054613785898}],
+     Annotation[#, {
+      29782, "Homo sapiens isolate mtGAfrNY0001 mitochondrion, complete \
+genome", "KM101684.1", 16570, {"KM101684.1", 53, "L2a", "L2a1+143+@16309"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8272363229240719, 
+      0.7785885599063677, -0.5958256336840774}],
+     Annotation[#, {
+      20577, "Homo sapiens isolate Patient70 mitochondrion, complete genome", 
+       "KC533504.1", 16567, {"KC533504.1", 54, "L2a", "L2a1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8179096506822627, 
+      0.5338023024142913, -0.3996377550024299}],
+     Annotation[#, {
+      31445, "Homo sapiens isolate STP48 haplogroup L2c mitochondrion, \
+complete genome", "KR135864.1", 16568, {"KR135864.1", 59, "L2c", "L2c"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8675840706162661, 
+      0.8457329866710542, -0.558369763619839}],
+     Annotation[#, {
+      10946, "Homo sapiens isolate BF346 mitochondrion, complete genome", 
+       "JQ044821.1", 16568, {"JQ044821.1", 57, "L2a", "L2a1e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8539272092244147, 
+      0.840366574159321, -0.5752495451399774}],
+     Annotation[#, {
+      31429, "Homo sapiens isolate SOM72 haplogroup L2a1a2 mitochondrion, \
+complete genome", "KR135848.1", 16571, {"KR135848.1", 57, "L2a", "L2a1a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.884998807173521, 
+      0.5428789902954715, -0.41566974310878124`}],
+     Annotation[#, {
+      10978, "Homo sapiens isolate BF125 mitochondrion, complete genome", 
+       "JQ044853.1", 16569, {"JQ044853.1", 60, "L2c", "L2c2b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8528122160774851, 
+      0.8852366718494755, -0.6274452486957627}],
+     Annotation[#, {
+      27446, "Homo sapiens isolate ZAM640 mitochondrion, complete genome", 
+       "KJ185468.1", 16568, {"KJ185468.1", 57, "L2a", "L2a1c5"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8897948090777509, 
+      0.8675009676325875, -0.5970776472036298}],
+     Annotation[#, {
+      27465, "Homo sapiens isolate NAB817 mitochondrion, complete genome", 
+       "KJ185487.1", 16566, {"KJ185487.1", 58, "L2a", "L2a1c4a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7668535099686566, 
+      0.7225892092417647, -0.5935175594313553}],
+     Annotation[#, {
+      20573, "Homo sapiens isolate Patient65 mitochondrion, complete genome", 
+       "KC533500.1", 16568, {"KC533500.1", 51, "L2a", "L2a1f3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-1., 0.6430494543434009, -0.6536161587764384}],
+     Annotation[#, {
+      11168, "Homo sapiens isolate BF119 mitochondrion, complete genome", 
+       "JQ045043.1", 16569, {"JQ045043.1", 67, "L2b", "L2b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.885940385950436, 
+      0.5661959969290722, -0.5101742086453749}],
+     Annotation[#, {
+      36, "Homo sapiens mitochondrion, complete genome", "AF346995.1", 
+       16568, {"AF346995.1", 62, "L2c", "L2c3a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8175708979334305, 
+      0.44686270610464063`, -0.4516637158474513}],
+     Annotation[#, {
+      12213, "Homo sapiens clone 11383 mitochondrion, complete genome", 
+       "JQ702169.1", 16568, {"JQ702169.1", 59, "L2c", "L2c"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8405037647058691, 
+      0.7851400896877215, -0.6330520744906036}],
+     Annotation[#, {
+      27878, "Homo sapiens isolate ZAM205 mitochondrion, complete genome", 
+       "KJ185900.1", 16568, {"KJ185900.1", 56, "L2a", "L2a1i1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8620638951970079, 
+      0.8614753527416358, -0.5959974598294124}],
+     Annotation[#, {
+      11160, "Homo sapiens isolate BF109 mitochondrion, complete genome", 
+       "JQ045035.1", 16569, {"JQ045035.1", 55, "L2a", "L2a1c4a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8472594382608365, 
+      0.7970680949823468, -0.5918771257253291}],
+     Annotation[#, {
+      25295, "Homo sapiens isolate HGDP00928 mitochondrion, complete genome", 
+       "KF451442.1", 16570, {"KF451442.1", 54, "L2a", "L2a1f"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9032336489496251, 
+      0.9256736706863975, -0.5806700097016707}],
+     Annotation[#, {
+      27711, "Homo sapiens isolate ZAM452 mitochondrion, complete genome", 
+       "KJ185733.1", 16568, {"KJ185733.1", 60, "L2a", "L2a1a2a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8388533118231098, 
+      0.7654263947983856, -0.6027381331460513}],
+     Annotation[#, {
+      11069, "Homo sapiens isolate BF384 mitochondrion, complete genome", 
+       "JQ044944.1", 16568, {
+       "JQ044944.1", 54, "L2a", "L2a1+143+16189  (16192)"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.793322132204714, 
+      0.7294203802248506, -0.506605726557663}],
+     Annotation[#, {
+      8840, "Homo sapiens isolate H095 mitochondrion, complete genome", 
+       "HM771205.1", 16568, {"HM771205.1", 60, "L2a", "L2a2a1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9471689532954971, 
+      0.7070012774235053, -0.6279900454017269}],
+     Annotation[#, {
+      32126, "Homo sapiens isolate A107 haplogroup L2b1a2 mitochondrion, \
+complete genome", "KT819240.1", 16568, {"KT819240.1", 73, "L2b", "L2b1a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8475041626004616, 
+      0.7980945830690545, -0.5846050962119633}],
+     Annotation[#, {
+      29728, "Homo sapiens isolate mtGAfrLA0006 mitochondrion, complete \
+genome", "KM101630.1", 16571, {"KM101630.1", 55, "L2a", "L2a1f"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8439971125743365, 
+      0.8047531549139266, -0.5992538055279801}],
+     Annotation[#, {
+      20558, "Homo sapiens isolate Patient48 mitochondrion, complete genome", 
+       "KC533485.1", 16568, {"KC533485.1", 54, "L2a", "L2a1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8173011207628723, 
+      0.7563164330800101, -0.591143175632585}],
+     Annotation[#, {
+      11100, "Homo sapiens isolate BF028 mitochondrion, complete genome", 
+       "JQ044975.1", 16568, {"JQ044975.1", 51, "L2a", "L2a1b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8690007364908947, 
+      0.537838138128757, -0.4888397125452065}],
+     Annotation[#, {
+      11066, "Homo sapiens isolate BF381 mitochondrion, complete genome", 
+       "JQ044941.1", 16567, {"JQ044941.1", 60, "L2c", "L2c"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7933561449443165, 
+      0.7585281566669921, -0.576257829511156}],
+     Annotation[#, {
+      4467, "Homo sapiens isolate L431 mitochondrion, complete genome", 
+       "EU092783.1", 16570, {"EU092783.1", 52, "L2a", "L2a1f"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9795520874213228, 
+      0.7402314552682505, -0.5389453329555998}],
+     Annotation[#, {
+      29810, "Homo sapiens isolate mtGAfrTX0001 mitochondrion, complete \
+genome", "KM101712.1", 16572, {"KM101712.1", 75, "L2b", "L2b2a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9983960035768887, 1., -0.6280437812343009}],
+     Annotation[#, {
+      10927, "Homo sapiens isolate BF320 mitochondrion, complete genome", 
+       "JQ044802.1", 16568, {"JQ044802.1", 61, "L2a", "L2a1c2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8596965220384764, 
+      0.8649557984541989, -0.5912654014288362}],
+     Annotation[#, {
+      29804, "Homo sapiens isolate mtGAfrSC0010 mitochondrion, complete \
+genome", "KM101706.1", 16571, {"KM101706.1", 59, "L2a", "L2a1a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8518982464385794, 
+      0.8392863795272831, -0.6322650539612038}],
+     Annotation[#, {
+      29029, "Homo sapiens isolate HGDP00149 mitochondrion, complete genome", 
+       "KJ446769.1", 16569, {
+       "KJ446769.1", 55, "L2a", "L2a1+143+16189  (16192)"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8273552561705462, 
+      0.8033974757713145, -0.5646513134676235}],
+     Annotation[#, {
+      27670, "Homo sapiens isolate ZAM665 mitochondrion, complete genome", 
+       "KJ185692.1", 16568, {"KJ185692.1", 55, "L2a", "L2a1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8677315433510588, 
+      0.5367626787891123, -0.5098080723263723}],
+     Annotation[#, {
+      25283, "Homo sapiens isolate HGDP00916 mitochondrion, complete genome", 
+       "KF451430.1", 16568, {"KF451430.1", 61, "L2c", "L2c3a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8615231439405573, 
+      0.8396468993386084, -0.5818015456997356}],
+     Annotation[#, {
+      11057, "Homo sapiens isolate BF297 mitochondrion, complete genome", 
+       "JQ044932.1", 16568, {"JQ044932.1", 56, "L2a", "L2a1l1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8455170768880512, 
+      0.74914399877415, -0.5995036677577323}],
+     Annotation[#, {
+      4477, "Homo sapiens isolate L442 mitochondrion, complete genome", 
+       "EU092793.1", 16571, {
+       "EU092793.1", 55, "L2a", "L2a1+143+16189  (16192)+@16309"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8054003572023781, 
+      0.7178582445318303, -0.5806606391277244}],
+     Annotation[#, {
+      27963, "Homo sapiens isolate ZAM065 mitochondrion, complete genome", 
+       "KJ185985.1", 16568, {"KJ185985.1", 53, "L2a", "L2a1f"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8729595837159851, 
+      0.9616153853570617, -0.6286400662972471}],
+     Annotation[#, {
+      27664, "Homo sapiens isolate ZAM442 mitochondrion, complete genome", 
+       "KJ185686.1", 16566, {"KJ185686.1", 62, "L2a", "L2a1d2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8812380672252443, 
+      0.9426844850181509, -0.6568543564851249}],
+     Annotation[#, {
+      20706, "Homo sapiens isolate BOT6_305 mitochondrion, complete genome", 
+       "KC622110.1", 16569, {"KC622110.1", 62, "L2a", "L2a1d2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8496293721339463, 
+      0.7752040735957685, -0.5896357441098946}],
+     Annotation[#, {
+      2810, "Homo sapiens isolate L2a-5-06 mitochondrion, complete genome", 
+       "DQ304957.1", 16568, {"DQ304957.1", 56, "L2a", "L2a1f2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8193211243974188, 
+      0.7873568463706677, -0.6319070904594144}],
+     Annotation[#, {
+      32175, "Homo sapiens haplogroup L2a1 mitochondrion, complete genome", 
+       "KT886411.1", 16570, {
+       "KT886411.1", 54, "L2a", "L2a1+143+16189  (16192)"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9864995139157255, 
+      0.7671549600670794, -0.5892718282022411}],
+     Annotation[#, {
+      29304, "Homo sapiens isolate chRCC10 mitochondrion, complete genome", 
+       "KJ801482.1", 16570, {"KJ801482.1", 77, "L2b", "L2b2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.9238657543445274, 
+      0.9251290341920587, -0.5571511046824974}],
+     Annotation[#, {
+      15088, "Homo sapiens clone 6947 mitochondrion, complete genome", 
+       "JQ705046.1", 16569, {"JQ705046.1", 61, "L2a", "L2a1c1a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8707552150592583, 
+      0.8514326740246105, -0.6051966400481692}],
+     Annotation[#, {
+      10958, "Homo sapiens isolate BF362 mitochondrion, complete genome", 
+       "JQ044833.1", 16569, {"JQ044833.1", 53, "L2a", "L2a1c4a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.838230350429764, 
+      0.7931762312971975, -0.5985968074260353}],
+     Annotation[#, {
+      31458, "Homo sapiens isolate MOZ95 haplogroup L2a1b1 mitochondrion, \
+complete genome", "KR135877.1", 16570, {"KR135877.1", 55, "L2a", "L2a1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8314138905696741, 
+      0.8085984872140259, -0.5749214850871107}],
+     Annotation[#, {
+      11004, "Homo sapiens isolate BF239 mitochondrion, complete genome", 
+       "JQ044879.1", 16568, {"JQ044879.1", 56, "L2a", "L2a1a2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7752581089519771, 
+      0.7170311967777555, -0.5882855814332472}],
+     Annotation[#, {
+      20714, "Homo sapiens isolate KGA020 mitochondrion, complete genome", 
+       "KC622118.1", 16569, {"KC622118.1", 53, "L2a", "L2a1f3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8210300341698984, 
+      0.7954988325007252, -0.5646742606129695}],
+     Annotation[#, {
+      11186, "Homo sapiens isolate BF223 mitochondrion, complete genome", 
+       "JQ045061.1", 16568, {"JQ045061.1", 55, "L2a", "L2a1f"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7921121822920194, 
+      0.7425979467082529, -0.5619707259984116}],
+     Annotation[#, {
+      2809, "Homo sapiens isolate L2a-5-05 mitochondrion, complete genome", 
+       "DQ304956.1", 16570, {"DQ304956.1", 54, "L2a", "L2a1f"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7137437993914975, -0.707953687156503, \
+-0.6497147865504298}],
+     Annotation[#, {
+      32147, "Homo sapiens isolate Fig09 haplogroup L3e2b1a2 mitochondrion, \
+complete genome", "KT819261.1", 16568, {"KT819261.1", 38, "L3e", "L3e2b1a2"}},
+       "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7320399932920006, -0.7724812828491788, \
+-0.639852480861392}],
+     Annotation[#, {
+      4473, "Homo sapiens isolate L438 mitochondrion, complete genome", 
+       "EU092789.1", 16576, {"EU092789.1", 37, "L3e", "L3e3a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7044437199968706, -0.6836852256232505, \
+-0.6723317594830824}],
+     Annotation[#, {
+      24592, "Homo sapiens isolate Le15 mitochondrion, complete genome", 
+       "KF358485.1", 16565, {"KF358485.1", 27, "L3e", "L3e5"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7527784100344189, -0.8343257161963192, \
+-0.7106957609533956}],
+     Annotation[#, {
+      27508, "Homo sapiens isolate NAB379 mitochondrion, complete genome", 
+       "KJ185530.1", 16568, {"KJ185530.1", 36, "L3e", "L3e1e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8541805911532458, -1., -0.8396292558323261}],
+     Annotation[#, {
+      4561, "Homo sapiens isolate L538 mitochondrion, complete genome", 
+       "EU092877.1", 16572, {"EU092877.1", 45, "L3f", "L3f2b"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7406891433755562, -0.8913563644484261, \
+-0.691575907147188}],
+     Annotation[#, {
+      4442, "Homo sapiens isolate L398 mitochondrion, complete genome", 
+       "EU092758.1", 16571, {"EU092758.1", 42, "L3f", "L3f1b2a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6876320458167732, -0.8394243176993903, \
+-0.7491483400279718}],
+     Annotation[#, {
+      25282, "Homo sapiens isolate HGDP00915 mitochondrion, complete genome", 
+       "KF451429.1", 16566, {"KF451429.1", 38, "L3b", "L3b1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7114229627559677, -0.7080137898478931, \
+-0.6857949503397363}],
+     Annotation[#, {
+      6409, "Homo sapiens isolate TC21 mitochondrion, complete genome", 
+       "FJ460540.1", 16567, {"FJ460540.1", 33, "L3d", "L3d4a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7907240044393326, -0.8060593579805893, \
+-0.6979558748884082}],
+     Annotation[#, {
+      28678, "Homo sapiens isolate HGDP00646 mitochondrion, complete genome", 
+       "KJ446418.1", 16569, {"KJ446418.1", 40, "L3h", "L3h1a2a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.799244245117482, -0.9311355440036159, \
+-0.8459866200111047}],
+     Annotation[#, {
+      6559, "Homo sapiens isolate CB6 mitochondrion, complete genome", 
+       "FJ625850.1", 16568, {"FJ625850.1", 41, "L3f", "L3f3b"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7306332730428703, -0.7762404232789006, \
+-0.6968003322273284}],
+     Annotation[#, {
+      27470, "Homo sapiens isolate gNAB17 mitochondrion, complete genome", 
+       "KJ185492.1", 16568, {"KJ185492.1", 34, "L3e", "L3e1e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.731279443924666, -0.7784452047873884, \
+-0.6928005470308131}],
+     Annotation[#, {
+      25113, "Homo sapiens isolate HGDP00738 mitochondrion, complete genome", 
+       "KF451260.1", 16568, {"KF451260.1", 35, "L3e", "L3e1b1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7692944398852639, -0.8448702549151031, \
+-0.6956523938902328}],
+     Annotation[#, {
+      27938, "Homo sapiens isolate ZAM284 mitochondrion, complete genome", 
+       "KJ185960.1", 16568, {"KJ185960.1", 37, "L3e", "L3e1e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7232511181025667, -0.9175829679332602, \
+-0.7699767958510814}],
+     Annotation[#, {
+      4541, "Homo sapiens isolate L518 mitochondrion, complete genome", 
+       "EU092857.1", 16571, {"EU092857.1", 43, "L3f", "L3f1b1a1"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7112541601503367, -0.585000074511528, \
+-0.6404540569614773}],
+     Annotation[#, {
+      11097, "Homo sapiens isolate BF287 mitochondrion, complete genome", 
+       "JQ044972.1", 16568, {"JQ044972.1", 34, "L3e", "L3e2b5"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7604073091722657, -0.8362947778804903, \
+-0.7138254360347058}],
+     Annotation[#, {
+      4563, "Homo sapiens isolate L540 mitochondrion, complete genome", 
+       "EU092879.1", 16589, {"EU092879.1", 34, "L3e", "L3e1c"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.657210482307304, -0.7459923599844649, \
+-0.6947955428721501}],
+     Annotation[#, {
+      11245, "Homo sapiens isolate MAN912 mitochondrion, complete genome", 
+       "JQ045120.1", 16566, {"JQ045120.1", 37, "L3b", "L3b1a"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7663816179169514, -0.7788872231506511, \
+-0.6833238906656858}],
+     Annotation[#, {
+      20736, "Homo sapiens isolate NAM402 mitochondrion, complete genome", 
+       "KC622140.1", 16566, {"KC622140.1", 43, "L3d", "L3d3a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8035220514806369, -0.6648578771743043, \
+-0.7496098000487376}],
+     Annotation[#, {
+      30639, "Homo sapiens isolate KA76 mitochondrion, complete genome", 
+       "KP229447.1", 16570, {"KP229447.1", 37, "L3i", "L3i1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7851182829809091, -0.7335630302072936, \
+-0.7100555529766566}],
+     Annotation[#, {
+      29727, "Homo sapiens isolate mtGAfrLA0005 mitochondrion, complete \
+genome", "KM101629.1", 16571, {"KM101629.1", 36, "L3e", "L3e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6779156964732751, -0.7707912051867934, \
+-0.7073156938176562}],
+     Annotation[#, {
+      28801, "Homo sapiens isolate HGDP00918 mitochondrion, complete genome", 
+       "KJ446541.1", 16567, {"KJ446541.1", 33, "L3e", "L3e4a1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8264968921929958, -0.9248070459403834, \
+-0.7551925194215648}],
+     Annotation[#, {
+      4446, "Homo sapiens isolate L406 mitochondrion, complete genome", 
+       "EU092762.1", 16571, {"EU092762.1", 44, "L3d", "L3d1c"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7586885710634556, -0.9232663971304609, \
+-0.7185396538585715}],
+     Annotation[#, {
+      27776, "Homo sapiens isolate gNAB605 mitochondrion, complete genome", 
+       "KJ185798.1", 16567, {"KJ185798.1", 42, "L3f", "L3f1b4a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7564933147683983, -0.875242152406795, \
+-0.6865829504279338}],
+     Annotation[#, {
+      18366, "Homo sapiens isolate Zam494 mitochondrion, complete genome", 
+       "JX303839.1", 16566, {"JX303839.1", 44, "L3d", "L3d3a1b"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7528721234510958, -0.9145224955323688, \
+-0.7377191920664596}],
+     Annotation[#, {
+      11183, "Homo sapiens isolate BF220 mitochondrion, complete genome", 
+       "JQ045058.1", 16567, {"JQ045058.1", 44, "L3b", "L3b1a6"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7232557366775101, -0.8644259795023491, \
+-0.7255942590418247}],
+     Annotation[#, {
+      4642, "Homo sapiens isolate L647 mitochondrion, complete genome", 
+       "EU092958.1", 16571, {"EU092958.1", 40, "L3b", "L3b1a6"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6661615687794568, -0.6174397684696057, \
+-0.6235795641803953}],
+     Annotation[#, {
+      27834, "Homo sapiens isolate ZAM548 mitochondrion, complete genome", 
+       "KJ185856.1", 16568, {"KJ185856.1", 34, "L3e", "L3e2b3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7775683603766242, -0.8000496972049117, \
+-0.6857738961819457}],
+     Annotation[#, {
+      20795, "Homo sapiens isolate NAM279 mitochondrion, complete genome", 
+       "KC622199.1", 16567, {"KC622199.1", 44, "L3d", "L3d3a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6895428818283169, -0.864725554854458, \
+-0.7524407167514056}],
+     Annotation[#, {
+      2889, "Homo sapiens isolate L3f-1-05 mitochondrion, complete genome", 
+       "DQ305036.1", 16568, {"DQ305036.1", 41, "L3f", "L3f1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7653336814005547, -0.7806900153237735, \
+-0.681786781719295}],
+     Annotation[#, {
+      20810, "Homo sapiens isolate NAM315 mitochondrion, complete genome", 
+       "KC622214.1", 16567, {"KC622214.1", 43, "L3d", "L3d3a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7952776929635765, -0.8763619982878539, \
+-0.6599636458729915}],
+     Annotation[#, {
+      18377, "Homo sapiens isolate Zam520 mitochondrion, complete genome", 
+       "JX303850.1", 16569, {"JX303850.1", 39, "L3e", "L3e1d1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7653336814005547, -0.7806900153237735, \
+-0.6817867817192951}],
+     Annotation[#, {
+      20807, "Homo sapiens isolate NAM298 mitochondrion, complete genome", 
+       "KC622211.1", 16567, {"KC622211.1", 43, "L3d", "L3d3a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7211911166349771, -0.7900704896833768, \
+-0.6885247591614216}],
+     Annotation[#, {
+      15563, "Homo sapiens clone 8212 mitochondrion, complete genome", 
+       "JQ705521.1", 16560, {"JQ705521.1", 37, "L3e", "L3e1f2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6711486937755036, -0.778795601104422, \
+-0.7664002089407898}],
+     Annotation[#, {
+      10757, "Homo sapiens isolate CHA4 mitochondrion, complete genome", 
+       "JN655792.1", 16566, {"JN655792.1", 36, "L3b", "L3b1a+@16124"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6986631657047717, -0.8478274363667722, \
+-0.7581818409646119}],
+     Annotation[#, {
+      14961, "Homo sapiens clone 6622 mitochondrion, complete genome", 
+       "JQ704919.1", 16566, {"JQ704919.1", 41, "L3b", "L3b3"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7172610589171774, -0.918501327801897, \
+-0.7736257968492224}],
+     Annotation[#, {
+      29683, "Homo sapiens isolate mtGAfrDE0001 mitochondrion, complete \
+genome", "KM101585.1", 16569, {"KM101585.1", 49, "L3f", "L3f1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8438321561456964, -0.9564969782366014, \
+-0.852680794303197}],
+     Annotation[#, {
+      10790, "Homo sapiens isolate SUD8 mitochondrion, complete genome", 
+       "JN655825.1", 16567, {"JN655825.1", 50, "L3h", "L3h2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7028190733956307, -0.7050320573396814, \
+-0.6476994997913325}],
+     Annotation[#, {
+      11873, "Homo sapiens clone 1010 mitochondrion, complete genome", 
+       "JQ701829.1", 16569, {"JQ701829.1", 35, "L3e", "L3e2b1a2"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7948319689835337, -0.8570567860020063, \
+-0.7298356720096002}],
+     Annotation[#, {
+      20764, "Homo sapiens isolate NAM181 mitochondrion, complete genome", 
+       "KC622168.1", 16570, {"KC622168.1", 41, "L3e", "L3e1a2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7077341563775724, -0.7418176456246153, \
+-0.6889539900886363}],
+     Annotation[#, {
+      27820, "Homo sapiens isolate gNAB319 mitochondrion, complete genome", 
+       "KJ185842.1", 16568, {"KJ185842.1", 32, "L3e", "L3e1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.8078513239158023, -0.7184592763784384, \
+-0.7249201891078965}],
+     Annotation[#, {
+      30634, "Homo sapiens isolate KA14 mitochondrion, complete genome", 
+       "KP229442.1", 16569, {"KP229442.1", 40, "L3i", "L3i1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.6613157766807499, -0.790262692289494, \
+-0.7460104054892887}],
+     Annotation[#, {
+      27587, "Homo sapiens isolate ZAM182 mitochondrion, complete genome", 
+       "KJ185609.1", 16565, {"KJ185609.1", 39, "L3b", "L3b1a11"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7852325011824489, -0.8979255698867377, \
+-0.7441330595105878}],
+     Annotation[#, {
+      30456, "Homo sapiens isolate Y370 haplogroup L3d1a1a mitochondrion, \
+complete genome", "KM986601.1", 16568, {"KM986601.1", 42, "L3d", "L3d1a1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7908266141108863, -0.8597395071753361, \
+-0.731261598584872}],
+     Annotation[#, {
+      20763, "Homo sapiens isolate NAM180 mitochondrion, complete genome", 
+       "KC622167.1", 16569, {"KC622167.1", 40, "L3e", "L3e1a2"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.707860280897772, -0.8678454738948108, \
+-0.7585559681243104}],
+     Annotation[#, {
+      29769, "Homo sapiens isolate mtGAfrNC0008 mitochondrion, complete \
+genome", "KM101671.1", 16566, {"KM101671.1", 39, "L3b", "L3b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7088211085413099, -0.8458245291827746, \
+-0.6011808062411355}],
+     Annotation[#, {
+      10570, "Homo sapiens isolate MU68 mitochondrion, complete genome", 
+       "JN225467.1", 16567, {"JN225467.1", 35, "L3d", "L3d1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.676859910324346, -0.6926010222266944, \
+-0.7219872429296185}],
+     Annotation[#, {
+      11143, "Homo sapiens isolate BF073 mitochondrion, complete genome", 
+       "JQ045018.1", 16565, {"JQ045018.1", 40, "L3b", "L3b1a9"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7883858575195204, -0.914288837444089, \
+-0.673754155150091}],
+     Annotation[#, {
+      4514, "Homo sapiens isolate L486 mitochondrion, complete genome", 
+       "EU092830.1", 16570, {"EU092830.1", 39, "L3d", "L3d1c1"}}, "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7485161682454146, -0.7953116692056497, \
+-0.7078526930738533}],
+     Annotation[#, {
+      32113, "Homo sapiens isolate G126 haplogroup L3h1b1a mitochondrion, \
+complete genome", "KT819227.1", 16568, {"KT819227.1", 45, "L3h", "L3h1b1a"}}, 
+      "Mouse"]& ], 
+    TagBox[
+     Text3DBox["\<\"\"\>", {-0.7586568171509196, -0.821111007874788, \
+-0.7090087808062606}],
+     Annotation[#, {
+      21, "Homo sapiens mitochondrion, complete genome", "AF346980.1", 
+       16570, {"AF346980.1", 36, "L3e", "L3e1e1"}}, "Mouse"]& ]}},
+  Axes->True,
+  AxesLabel->{None, None, None},
+  BoxRatios->{1, 1, 1},
+  FaceGridsStyle->Automatic,
+  ImageSize->{341.37177864725663`, 380.94572836773597`},
+  ImageSizeRaw->Automatic,
+  PlotRange->{{-1., 1.}, {-1., 1.}, All},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {Automatic, Automatic}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{1.0803362391036728`, -2.80932210895894, 1.546150994758864},
+  ViewVertical->{-0.026448118281453537`, -0.18100877016419617`, 
+   0.9831257916274069}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.699918313772648*^9}],
+
+Cell[BoxData[
+ DynamicBox[
+  ToBoxes[$CellContext`mousepos = 
+    MouseAnnotation[]; $CellContext`info = {
+     "ID", "Organism", "Len", "Acc", "Haplo"}; $CellContext`info = 
+    Map[Style[#, Black, Bold, Medium]& , $CellContext`info]; 
+   If[$CellContext`mousepos === Null, 
+     Null, $CellContext`disp = {$CellContext`info, {
+        ToString[
+         Part[$CellContext`mousepos, 1]], 
+        ToString[
+         Part[$CellContext`mousepos, 2]], 
+        ToString[
+         Part[$CellContext`mousepos, 3]], 
+        ToString[
+         Part[$CellContext`mousepos, 4]], 
+        Part[$CellContext`mousepos, 5]}}]; Grid[
+     Transpose[$CellContext`disp], 
+     Alignment -> {{Left, Left}, {Center, Center}}, Background -> LightBlue, 
+     ItemSize -> {{
+        Scaled[0.2], 
+        Scaled[0.8]}}, Frame -> All], StandardForm],
+  ImageSizeCache->{1074., {47.5, 54.5}}]], "Print",
+ CellChangeTimes->{3.699917664448907*^9, 3.699917778917389*^9, 
+  3.6999183137882743`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.699917659557768*^9}],
+
+Cell[" ", "Text",
+ Editable->False,
+ Selectable->False,
+ CellFrame->{{0, 0}, {0, 2}},
+ ShowCellBracket->False,
+ CellMargins->{{0, 0}, {1, 1}},
+ CellElementSpacings->{"CellMinHeight"->1},
+ CellFrameMargins->0,
+ CellFrameColor->RGBColor[0, 0, 1],
+ CellSize->{Inherited, 4}]
+},
+WindowSize->{1205, 661},
+WindowMargins->{{-8, Automatic}, {Automatic, 0}},
+Magnification:>1.25 Inherited,
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 755, 21, 110, "Input"],
+Cell[1338, 45, 446, 11, 37, "Output"]
+}, Open  ]],
+Cell[1799, 59, 309, 9, 37, "Input"],
+Cell[CellGroupData[{
+Cell[2133, 72, 1564, 44, 230, "Input"],
+Cell[3700, 118, 321, 5, 28, "Print"]
+}, Open  ]],
+Cell[4036, 126, 313, 8, 37, "Input"],
+Cell[CellGroupData[{
+Cell[4374, 138, 1598, 46, 134, "Input"],
+Cell[5975, 186, 312, 6, 37, "Output"]
+}, Open  ]],
+Cell[6302, 195, 3593, 89, 182, "Input"],
+Cell[9898, 286, 630, 19, 62, "Input"],
+Cell[10531, 307, 400, 12, 37, "Input"],
+Cell[10934, 321, 3030, 74, 278, "Input"],
+Cell[13967, 397, 1329, 28, 110, "Input"],
+Cell[CellGroupData[{
+Cell[15321, 429, 2400, 62, 254, "Input"],
+Cell[17724, 493, 449, 8, 28, "Print"]
+}, Open  ]],
+Cell[18188, 504, 1159, 30, 110, "Input"],
+Cell[19350, 536, 271, 9, 10, "Text"],
+Cell[19624, 547, 3000, 59, 134, "Input"],
+Cell[CellGroupData[{
+Cell[22649, 610, 102, 1, 37, "Input"],
+Cell[22754, 613, 151, 2, 37, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22942, 620, 4377, 101, 398, "Input"],
+Cell[27322, 723, 263, 6, 28, "Print"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27622, 734, 460, 11, 110, "Input"],
+Cell[28085, 747, 229, 4, 37, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28351, 756, 493, 11, 110, "Input"],
+Cell[28847, 769, 101, 1, 37, "Output"]
+}, Open  ]],
+Cell[28963, 773, 271, 9, 10, "Text"],
+Cell[29237, 784, 444, 14, 37, "Input"],
+Cell[CellGroupData[{
+Cell[29706, 802, 561, 16, 62, "Input"],
+Cell[30270, 820, 240, 5, 37, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30547, 830, 7508, 196, 854, "Input"],
+Cell[38058, 1028, 241, 3, 37, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[38336, 1036, 622, 15, 37, "Input"],
+Cell[38961, 1053, 4132, 114, 353, "Output"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[43130, 1172, 363, 9, 29, "Input"],
+Cell[43496, 1183, 669, 15, 62, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44202, 1203, 139, 2, 37, "Input"],
+Cell[44344, 1207, 99, 1, 37, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44480, 1213, 136, 2, 37, "Input"],
+Cell[44619, 1217, 99, 1, 37, "Output"]
+}, Open  ]],
+Cell[44733, 1221, 271, 9, 12, "Text"],
+Cell[45007, 1232, 1101, 24, 86, "Input"],
+Cell[CellGroupData[{
+Cell[46133, 1260, 3080, 83, 302, "Input"],
+Cell[CellGroupData[{
+Cell[49238, 1347, 588, 14, 28, "Print"],
+Cell[49829, 1363, 587, 14, 28, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[50465, 1383, 18819, 502, 2150, "Input"],
+Cell[CellGroupData[{
+Cell[69309, 1889, 208, 5, 28, "Print"],
+Cell[69520, 1896, 179, 4, 28, "Print"],
+Cell[69702, 1902, 220, 4, 28, "Print"],
+Cell[69925, 1908, 167, 4, 28, "Print"],
+Cell[70095, 1914, 133, 2, 28, "Print"],
+Cell[70231, 1918, 338, 7, 28, "Print"],
+Cell[70572, 1927, 578, 13, 28, "Print"],
+Cell[71153, 1942, 180, 5, 28, "Print"],
+Cell[71336, 1949, 137, 2, 28, "Print"],
+Cell[71476, 1953, 141, 2, 28, "Print"],
+Cell[71620, 1957, 49373, 1082, 486, "Print"],
+Cell[120996, 3041, 973, 24, 114, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[121996, 3069, 87, 1, 62, "Input"],
+Cell[122086, 3072, 271, 9, 10, "Text"]
+}
+]
+*)
+
