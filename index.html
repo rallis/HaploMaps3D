@@ -17,9 +17,7 @@
 
 
 	<script>
-	var dbg = false, errorHasOccured = false;
-	var labelColors = ['blue', 'red', 'green', 'orange', 'magenta', 'yellow', 'brown', 'lime', 'gray', 'pink','cyan','seagreen', 'olive', 'purple', 'black'];
-	
+	var dbg = false, errorHasOccured = false, dataset;
 
 	function geturlparamvalue(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -30,6 +28,12 @@
 			return results[1];
 		}else{
 			return -1;
+		}
+	}
+
+	function emptyLocalStorage(){
+		for (var a in localStorage){ 
+			delete localStorage[a]; 
 		}
 	}
 
@@ -58,31 +62,41 @@
 
 	class MoDMap3D {
 
-		constructor (accIDsSets, kMer = 9, taxaInfo = false, description = "No_Description") {
+		constructor (accIDsSets, kMer = 9, taxaInfo = false, namesets = [], descr = "No_Description") {
 			this.id = + new Date();
 			this.accIDsSets = accIDsSets;
+			this.accIDs = [];
 			this.kMer = kMer;
 			this.taxaInfo = taxaInfo;
-			this.description = description;
+			this.descr = descr;
+			this.namesets = namesets;
 			this.allSequences = [];
 			this.error = false;
 			this.errorReason = '';
 			this.calls2NCBI = 0;
 			this.totalNumOfSeq = 0;
 			this.totalNumOfSeqEachGroup = [];
+			var noNameSet = false;
+			if(this.namesets.length == 0){ noNameSet = true; }
 			for(var i=0; i<this.accIDsSets.length; i++){
 				this.totalNumOfSeqEachGroup.push(this.accIDsSets[i].length);
+				if(noNameSet ){ this.namesets.push("NA"); }
 				for(var j=0; j<this.accIDsSets[i].length; j++){
 					this.totalNumOfSeq += 1;
 					this.allSequences.push(["", "", "", "", "" ]);
+					this.accIDs.push(this.accIDsSets[i][j]);
 				}
 			}
 			this.distMatrix = [];
 			this.finalEigenvec = [];
 			this.finalEigenval = [];
+			this.finalPoints = [];
+			this.labelColors = ['blue', 'red', 'green', 'orange', 'magenta', 'yellow', 'brown', 'lime', 'gray', 'pink','cyan','seagreen', 'olive', 'purple', 'black'];
+			this.mapFileFormat = '';
+			this.mapTimeStamp = 0;
 		}
 
-		toString (){ return "MoDMap ID= ["+this.id+"], Groups= ["+this.accIDsSets.length + "] each ["+this.totalNumOfSeqEachGroup+"], k= [" + this.kMer + "], Taxa= [" + this.taxaInfo+"], Description= ["+this.description+"]"; }
+		toString (){ return "MoDMap ID= ["+this.id+"], Groups= ["+this.accIDsSets.length + "] each ["+this.totalNumOfSeqEachGroup+"] total= ["+this.accIDs.length+"], k= [" + this.kMer + "], Taxa= [" + this.taxaInfo+"], Description= ["+this.descr+"]"; }
 
 		print (){ console.log( this.toString() ); }
 
@@ -141,29 +155,21 @@
 		}
 
 		loadSequences(localDBG = false){
-			var accIDs=[];
-			for(var i=0; i<this.accIDsSets.length; i++){
-				for(var j=0; j<this.accIDsSets[i].length; j++){
-					accIDs.push(this.accIDsSets[i][j]);
-				}
-			}
-			if(localDBG){ console.log("accIDs=",accIDs); }
-			if(localDBG){ console.log("In total = " + accIDs.length + " sequences."); }
-			if(accIDs.length < 5){
+			console.log("loadSequences for ["+this.id+"]");
+			if(this.accIDs.length < 5){
 				this.error = true;
-				this.errorReason = 'Found '+accIDs.length+' sequences. Please enter at least 5 sequences and try again.';
+				this.errorReason = 'Found '+this.accIDs.length+' sequences. Please enter at least 5 sequences and try again.';
 			}
-
-			for(var i=0; i<accIDs.length; i++){
+			for(var i=0; i<this.accIDs.length; i++){
 				if(!this.error){
-					this.loadFastaFromNCBI(i, accIDs[i].trim(), this.loadFastaFromNCBICallback, this, localDBG);
-					if(this.taxaInfo){ this.getTaxaFromNCBI(i, accIDs[i].trim(), this.getTaxaFromNCBICallback, this, localDBG); }
+					this.loadFastaFromNCBI(i, this.accIDs[i].trim(), this.loadFastaFromNCBICallback, this, localDBG);
+					if(this.taxaInfo){ this.getTaxaFromNCBI(i, this.accIDs[i].trim(), this.getTaxaFromNCBICallback, this, localDBG); }
 				}
 			}
 		}
 
 		computeDistMatrix(localDBG = false){
-			if(localDBG){ console.log("BEGIN computeDistMatrix()"); }	
+			console.log("computeDistMatrix for ["+this.id+"]");	
 			var dim = this.totalNumOfSeq;
 			for(var i=0; i<dim; i++){
 				this.distMatrix.push([]);
@@ -241,13 +247,13 @@
 
 				}
 
-				console.log(this.distMatrix);
+				if(localDBG){ console.log(this.distMatrix); }
 				this.computeMDS(localDBG);
 			  });
 		}
 
 		computeMDS(localDBG = false){
-			if(localDBG){ console.log("BEGIN computeMDS()"); }	
+			console.log("computeMDS for ["+this.id+"]"); 	
 			
 			// pre-processign MDS
 			// part 1
@@ -328,186 +334,174 @@
 			}
 			if(localDBG){console.log("allMinMax=",allMinMax);}
 
-		}	
-			
-
-		// 	// PRODUCING MAPFILE
-		// 	mapfile = '';
-		// 	// line 1
-		// 	for(var i=0; i<accIDsSets.length; i++){
-		// 		mapfile += accIDsSets[i].length + ",";
-		// 	}
-		// 	mapfile = mapfile.slice(0,-1);
-		// 	mapfile += "\n";
-		// 	// line 2
-		// 	for(var i=0; i<accIDsSets.length; i++){
-		// 		mapfile += $("#colorset"+i).val() + ",";
-		// 	}
-		// 	mapfile = mapfile.slice(0,-1);
-		// 	mapfile += "\n";
-		// 	// line 3+4
-		// 	mapfile += "5\nIndex,Acc,Name,Length,Taxa\n";
-		// 	// line 5
-		// 	for(var i=0; i<accIDsSets.length; i++){
-		// 		mapfile += $("#colorset"+i).val() + ",";
-		// 	}
-		// 	mapfile = mapfile.slice(0,-1);
-		// 	mapfile += "\n";
-		// 	// line 6
-		// 	for(var i=0; i<accIDsSets.length; i++){
-		// 		mapfile += $("#nameset"+i).val()+" ("+accIDsSets[i].length+"),";
-		// 	}
-		// 	mapfile = mapfile.slice(0,-1);
-		// 	mapfile += "\n";
-			
-		// 	// line 7
-		// 	// OLD mapfile += "No Description given\n";
-		// 	for(var i=0; i<$("#numofsets").val(); i++){
-		// 		mapfile += $("#nameset"+i).val() + ', ';
-		// 	}
-		// 	mapfile = mapfile.slice(0,-2);  //because of space above!
-		// 	// old mapfile
-		// 	// mapfile += '. Number of sequences is '+accIDs.length+ "\n";
-		// 	mapfile += '#User-input sequences#'+accIDs.length+"#Approx.Inf.Dist#NA\n";
-
-		// 	// rest of the lines
-		// 	for(var i=0; i<numOfSeq; i++){
-		// 		for(var j=0; j<points[i].length; j++){
-		// 			mapfile += ((2*points[i][j] - allMinMax[j][0] - allMinMax[j][1]) / ( allMinMax[j][1] - allMinMax[j][0] ) ) +"\n";	
-		// 		}
-		// 		mapfile += i+"\n";                      // INDEX
-		// 		mapfile += allSequences[i][0]+"\n";     // ACC
-		// 		mapfile += allSequences[i][4].split("|").pop().trim()+"\n";     // NAME
-		// 		mapfile += allSequences[i][1]+"\n";     // LENGTH
-		// 		mapfile += allSequences[i][2]+"\n";     // TAXA
-		// 	}
-		// 	mapfile = mapfile.slice(0,-1);
-		// 	if(localDBG){console.log("c/p=\n",mapfile);}
-
-		// 	var mapTimeStamp = new Date().getTime();
-		// 	if(typeof(Storage) !== "undefined") {
-		// 		try{
-		// 			localStorage.setItem("mapfile"+mapTimeStamp, mapfile);
-		// 			localStorage.setItem("distMatrix"+mapTimeStamp, distMatrix);	
-		// 		}catch(err){
-		// 			console.log(err.message);
-		// 			errorHasOccured = true;
-		// 			$('#progress').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>'+' ERROR [<strong>'+err.message+'</strong>]. Consider emptying localStorage.</div>');
-		// 			return;
-		// 		}
-		// 	} else {
-		// 		console.log("ERROR! NO LOCAL STORAGE AVAILABLE!?");
-		// 		alert("ERROR! NO LOCAL STORAGE AVAILABLE!?");
-		// 	}
-			
-		// 	$('#progress').html('100%');
-		// 	$("#file_contents").html('<pre>'+mapfile+'</pre>');
-		// 	$("#file_contents").hide();
-		// 	// END OF MDS
-			
-
-		// 	time = new Date();
-		// 	step3B = time.getTime();
-		// 	$("#stepstatus").html('\
-		// 		<p><strong>Step 1 (NCBI + FCGRs) DONE in ~'+(step1B-step1A)/1000+' sec</p>\
-		// 		<p>Step 2 (AID) DONE in ~'+(step2B-step2A)/1000+' sec</p>\
-		// 		<p>Step 3 (MDS) DONE in ~'+(step3B-step3A)/1000+' sec</p></strong>');
-		// 	$("#stepstatus").html($("#stepstatus").html()+'<p><a href="load.html?mapid=local'+mapTimeStamp+'" target="_blank">Show MoDMap</a>');
-		// 	if(localDBG){
-		// 		$("#stepstatus").html($("#stepstatus").html()+' or <a href="#viewfile" id="viewfile">view contents</a>');
-		// 	}
-		// 	$("#stepstatus").html($("#stepstatus").html()+'</p>');
-		// 	$("#mainprogressbar").hide();
-		// 	$("#viewfile").click(function(){
-		// 		$("#file_contents").toggle();
-		// 	});
-
-		// 	// list local storage for debuging
-		// 	if(localDBG){for (var a in localStorage) {console.log(a);}}
-		// 	if(localDBG){console.log(Object.keys(localStorage));}
-		// }
-
-	}
-
-	
-
-	
-	simpelmap = new MoDMap3D( [ 
-		["NC_014453","NC_012761","NC_012762","NC_012763","NC_012764","NC_012766","NC_012769","NC_012771","NC_012773","NC_011053","NC_010299","NC_010300","NC_004025","NC_002765"], 
-		["NC_018115","NC_018116","NC_018096","NC_018057","NC_018058","NC_018059","NC_018060","NC_018061","NC_018062","NC_018063","NC_016666","NC_015485","NC_015486","NC_014042","NC_014045","NC_014047","NC_014051","NC_013993","NC_012920","NC_012774","NC_012775","NC_012670","NC_011519","NC_011137","NC_011120","NC_009747","NC_009748","NC_008215","NC_008216","NC_008217","NC_008218","NC_008219","NC_008220","NC_008066","NC_007009","NC_006900","NC_006901","NC_005943","NC_002811","NC_002763","NC_002764","NC_001643","NC_001644","NC_001645","NC_001646","NC_001992","NC_002082","NC_002083"]] , 9, true );
-	// simpelmap = new MoDMap3D( [ 
-	// 	["NC_014453","NC_012761","NC_012762","NC_012763","NC_012764","NC_012766"], 
-	// 	["NC_018115","NC_018116","NC_018096","NC_018057","NC_018058","NC_018059"]], 9 , true);
-	simpelmap.print(); 
-	simpelmap.loadSequences(true);
-
-
-
-
-	function computeAIDdist(){
-		console.log("aid start");
-		$("#aidinfo").empty();
-		$("#aidinfomenu").slideDown();
-		$("#aidinfo").html('<img src="img/loading.gif" width="30" height="30"/>');
-		console.log($("#seq0").val());
-		console.log($("#seq1").val());
-		errorHasOccured = false;
-
-		var gotBothSequences = 0;
-		for (var indSeq=0; indSeq<2; indSeq++){
-			loadFastaFromNCBI(indSeq, $("#seq"+indSeq).val(), function(ind, accID, output, header){
-				aidDistInfo[ind] = [accID, header, output.length,  buildFCGR(output, fcgrRes)];
-				if(dbg){console.log([ind,accID,output.length, header,'DONE']);}
-				
-				gotBothSequences += 1;
-				if(gotBothSequences == 2 && !errorHasOccured){
-					
-					console.log("finished computation");
-					var aidinfotext = "<strong>NCBI: ["+aidDistInfo[0][0]+"]</strong> - Length: "+aidDistInfo[0][2]+"<br>Header: "+aidDistInfo[0][1]+"<br><br> <strong>NCBI: ["+aidDistInfo[1][0]+"]</strong> - Length: "+aidDistInfo[1][2]+"<br>Header: "+aidDistInfo[1][1]+"<br><br>";
-					
-					var aidnumerator = aidDistInfo[0][3]['size'] + aidDistInfo[1][3]['size'];
-					var aiddenominator=0;
-					for(var unionInd=0; unionInd<Math.pow(4,fcgrRes); unionInd++){
-						if( (aidDistInfo[0][3]['flatFCGR'][unionInd]==1) || (aidDistInfo[1][3]['flatFCGR'][unionInd]==1) ){
-							aiddenominator++;
-						} 
-					}
-					console.log(aidnumerator,aiddenominator,2 - aidnumerator*1.0/aiddenominator);
-					
-					aidinfotext += "<strong>AID: </strong>"+ String((2 - aidnumerator*1.0/aiddenominator).toFixed(5));
-					$("#aidinfo").html(aidinfotext);
-
-
+			// part 8
+			// SCALE POINTS
+			for(var i=0; i<numOfSeq; i++){
+				this.finalPoints.push([]);
+				for(var j=0; j<points[i].length; j++){
+					this.finalPoints[i][j] = ((2*points[i][j] - allMinMax[j][0] - allMinMax[j][1]) / ( allMinMax[j][1] - allMinMax[j][0] ) );
 				}
+			}
+			if(localDBG){console.log("finalPoints=",this.finalPoints);}
 
-			});	
-		}
+			// part 9
+			// PRODUCING MAPFILE
+			var mapfile = '';
+			// line 1
+			for(var i=0; i<this.accIDsSets.length; i++){
+				mapfile += this.accIDsSets[i].length + ",";
+			}
+			mapfile = mapfile.slice(0,-1);
+			mapfile += "\n";
+			// line 2
+			for(var i=0; i<this.accIDsSets.length; i++){
+				mapfile += this.labelColors[i] + ",";
+			}
+			mapfile = mapfile.slice(0,-1);
+			mapfile += "\n";
+			// line 3+4
+			mapfile += "5\nIndex,Acc,Name,Length,Taxa\n";
+			// line 5
+			for(var i=0; i<this.accIDsSets.length; i++){
+				mapfile += this.labelColors[i] + ",";
+			}
+			mapfile = mapfile.slice(0,-1);
+			mapfile += "\n";
+			// line 6
+			for(var i=0; i<this.accIDsSets.length; i++){
+				mapfile += this.namesets[i] +" ("+this.accIDsSets[i].length+"),";
+			}
+			mapfile = mapfile.slice(0,-1);
+			mapfile += "\n";
+			
+			// line 7
+			for(var i=0; i<this.accIDsSets.length; i++){
+				mapfile += this.namesets[i] + ', ';
+			}
+			mapfile = mapfile.slice(0,-2);  //because of space above!
+			
+			// old mapfile
+			mapfile += '#'+this.descr+'#'+this.accIDs.length+"#Approx.Inf.Dist#NA\n";
+			// rest of the lines
+			for(var i=0; i<numOfSeq; i++){
+				for(var j=0; j<this.finalPoints[i].length; j++){
+					// mapfile += ((2*points[i][j] - allMinMax[j][0] - allMinMax[j][1]) / ( allMinMax[j][1] - allMinMax[j][0] ) ) +"\n";	
+					mapfile += this.finalPoints[i][j] +"\n";	
+				}
+				mapfile += i+"\n";                      // INDEX
+				mapfile += this.allSequences[i][0]+"\n";     // ACC
+				mapfile += this.allSequences[i][4].split("|").pop().trim()+"\n";     // NAME
+				mapfile += this.allSequences[i][1]+"\n";     // LENGTH
+				mapfile += this.allSequences[i][2]+"\n";     // TAXA
+			}
+			mapfile = mapfile.slice(0,-1);
+			if(localDBG){console.log("c/p=\n",mapfile);}
 
-		console.log("aid end");
+			this.mapFileFormat = mapfile;
+
+			var mapTimeStamp = new Date().getTime();
+			this.mapTimeStamp = mapTimeStamp;
+			if(typeof(Storage) !== "undefined") {
+				try{
+					localStorage.setItem("mapfile"+this.mapTimeStamp, this.mapFileFormat);
+					localStorage.setItem("distMatrix"+this.mapTimeStamp, this.distMatrix);	
+				}catch(err){
+					console.log(err.message);
+					this.error = true;
+					this.errorReason = 'Error ['+err.message+']. Consider emptying localStorage.';
+				}
+			} else {
+				console.log("ERROR! NO LOCAL STORAGE AVAILABLE!?");
+				alert("ERROR! NO LOCAL STORAGE AVAILABLE!?");
+			}
+
+			
+			// 	// list local storage for debuging
+			if(localDBG){for (var a in localStorage) {console.log(a);}}
+			if(localDBG){console.log(Object.keys(localStorage));}
+			// for (var a in localStorage){ delete localStorage[a]; }
+		
+			// change this accordingly
+			$("#result").html( $("#result").html() + '<a href="./load.html?mapid=local'+this.mapTimeStamp+'" target="_blank">Show MoDMap</a>');			
+			console.log(this);
+		}	
 	}
 
-	
-	
+	function selectHaplo(arr, typeHaplo){ return arr.filter(selectHaploHelp(typeHaplo)); }
 
+	function selectHaploHelp(typeHaplo){
+		return function(element){
+			if( (element[3] > 16000) && element[4] && (element[4].length > 0) ){
+				return element[4][2].startsWith(typeHaplo);
+			}else{
+				return false;
+			}
+		}
+	}
+	
+	function buildMoDMapForHaplogroups(haplos, howmany = 50, kMer = 9, taxaInfo = true, localDBG = false){
+		var datasetToPlot = [], accToPlot = [], tmpSel = [];
+		for (var i = 0; i < haplos.length; i++) {
+			tmpSel = selectHaplo(dataset, haplos[i]);
+			datasetToPlot.push(tmpSel);
+		}
+		
+		for(var i=0; i<datasetToPlot.length; i++){
+			accToPlot.push([]);
+			for(var j=0; j< howmany; j++){
+				if(datasetToPlot[i].length > j){ accToPlot[i].push(datasetToPlot[i][j][2]); }
+			}
+		}
+		if(localDBG){ console.log(accToPlot); }
 
+		var curHaploMap = new MoDMap3D( accToPlot, kMer, taxaInfo);
+		return curHaploMap;
+	}
+	
 
 	$(document).ready(function(){
 
-		// $.ajax({
-		// 	url: "./tmp/haplo.txt", 
-		// 	cache: false, 
-		// 	success: function(result){
-		// 		// LOAD FILENAMES OF MAPS 
-		// 		//var result = JSON.parse(result);
-		// 		//console.log(result);
-		// 		var resfetch;
-		// 		resfetch=JSON.parse(result)['maps'];	
-		// 		var outcome='';
-		// 		for(i=0;i<resfetch.length;i++){
-		// 			console.log(resfetch[i]);
-		// 		}	
-		// 	}
-		// });
+		emptyLocalStorage();
+
+		$.ajax({
+			url: "./extra/haplo.txt", 
+			cache: false, 
+			success: function(result){
+				// LOAD available accessions
+				var resfetch = JSON.parse(result)['dataset'];	
+				dataset = resfetch;
+				$("#startHaplo").show();	
+			},
+			error: function(){
+				console.log('Error loading main dataset..');
+			}
+		});
+
+		$("#startHaplo").click(function(){
+
+			var ls1 = [ "L1", "L2", "L3", "L4", "L5"];
+			var ls2 = [ "L1a", "L1b", "L1c"];
+			var ls3 = [ "N", "X", "Y"];
+			var ls4 = [ "O", "p", "H"];
+			var ls5 = [ "L3", "M", "Q"];
+
+
+			var xmap = buildMoDMapForHaplogroups(ls5, 30, 9, true, true);
+			xmap.print();
+			xmap.loadSequences(false);
+
+		});
+
+
+		// simpelmap = new MoDMap3D( [ 
+		// 	["NC_014453","NC_012761","NC_012762","NC_012763","NC_012764","NC_012766","NC_012769","NC_012771","NC_012773","NC_011053","NC_010299","NC_010300","NC_004025","NC_002765"], 
+		// 	["NC_018115","NC_018116","NC_018096","NC_018057","NC_018058","NC_018059","NC_018060","NC_018061","NC_018062","NC_018063","NC_016666","NC_015485","NC_015486","NC_014042","NC_014045","NC_014047","NC_014051","NC_013993","NC_012920","NC_012774","NC_012775","NC_012670","NC_011519","NC_011137","NC_011120","NC_009747","NC_009748","NC_008215","NC_008216","NC_008217","NC_008218","NC_008219","NC_008220","NC_008066","NC_007009","NC_006900","NC_006901","NC_005943","NC_002811","NC_002763","NC_002764","NC_001643","NC_001644","NC_001645","NC_001646","NC_001992","NC_002082","NC_002083"]] , 9, true, ["Streps", "Haplo"] );
+		// // simpelmap = new MoDMap3D( [ 
+		// // 	["NC_014453","NC_012761","NC_012762","NC_012763","NC_012764","NC_012766"], 
+		// // 	["NC_018115","NC_018116","NC_018096","NC_018057","NC_018058","NC_018059"]], 9 , true, ["Test1", "Test2"]);
+		// simpelmap.print(); 
+		// simpelmap.loadSequences(false);
+
 
 	});
 
@@ -535,213 +529,26 @@
 	<div class="container">
 		<ul class="nav nav-tabs" id="guide-tabs">
 			<li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-			<li><a data-toggle="tab" href="#menu1">Explore a Map</a></li>
-			<li><a data-toggle="tab" href="#menu2">Build or Extend a Map</a></li>
-			<li><a data-toggle="tab" href="#menu4">About</a></li>
+			<li><a data-toggle="tab" href="#about">About</a></li>
 		</ul>
 
 		<div class="tab-content">
 			<div id="home" class="tab-pane fade in active">
 				<h3>Welcome to HaploMaps3D!</h3>
-			</div>
-			<div id="menu1" class="tab-pane fade">
-				<h3>Explore available MoDMaps</h3>
-				<p>Here you can find a list of available built-in MoDMaps to explore. Select a map from sidebar, preview its content, and click on "Show Map" to see it in action.</p>
-				
-				<div class="col-xs-5">
-					<div id="listgroupsofmaps" class="panel panel-default">
-					</div>
-				</div>
-				<div class="col-xs-6 " id="filecontent">
+				<input type="text" id="qmtdna" />
+				<input type="submit" id="startHaplo" name="startHaplo" value="Find out!" style="display:none;"/>
+				<div class="col-xs-6 " id="file_contents">
 				</div>  
+				<div class="col-xs-6 " id="result">
+				</div> 
 			</div>
-			<div id="menu2" class="tab-pane fade">
-				<!-- style="padding-right:0px; border-right: 1px solid #ccc;" -->
-				<div class="col-xs-10" id="buildmapview" >
-					<h3>Build your map, for your dataset</h3>
-					
-					<!-- <div class="panel panel-default">
-					  <div class="panel-heading">Panel with panel-default class</div>
-					  <div class="panel-body">Panel Content</div>
-					</div> -->
-
-					<div class="panel panel-default">
-						<div class="panel-heading"><label>Choose an option to continue</label></div>
-						<div class="panel-body">
-						<label><input type="radio" id="buildmapmenuheader" name="mapmenu"/> Build a MoDMap from your dataset</label><br>
-						<label><input type="radio" id="extendmapmenuheader" name="mapmenu"/> Extend an existing MoDMap</label>
-						</div>
-					</div>
-
-					<div class="panel panel-default" id="buildmapmenucontent">
-						<div class="panel-heading"><label>Info</label></div>
-						<div class="panel-body">
-							<p>If you do not know the accession number of a species, you can search directly in NCBI from <a href="https://www.ncbi.nlm.nih.gov/nuccore/?term=Homo+sapiens" target="_blank">here</a>. Samples you can try: 
-							<a href="#" id="dataset1">[1] 62 mtDNA primates</a> - 
-							<a href="#" id="dataset2">[2] 112 mtDNA amphibia</a> - 
-							<a href="#" id="dataset3">[3] 39 HIV-1 genomes</a> 
-							</p>
-						</div>
-					</div>
-
-					<div class="panel panel-default" id="extendmapmenucontent">
-						<div class="panel-heading"><label>Info</label></div>
-						<div class="panel-body">
-							<p>Extend a map by adding new points in a set of predefined MoDMaps. The new points can be given as comma separated accession numbers from NCBI. If you do not know the accession number of a species, you can search directly in NCBI from <a href="https://www.ncbi.nlm.nih.gov/nuccore/?term=Homo+sapiens" target="_blank">here</a>.</p>
-
-
-							<p>
-							<dl class="dl-horizontal">
-							<dt>Background map:</dt>
-							<dd><select id="extendmapid">
-								<option value="Animalia_mtDNA_ClassAmphibia">Animalia_mtDNA_ClassAmphibia</option>
-								<!-- INSECTS REMOVED BECAUSE OF TOO MANY SUBSETS 21>>10 -->
-								<!-- <option value="Animalia_mtDNA_ClassInsecta">Animalia_mtDNA_ClassInsecta</option> -->
-								<option value="Animalia_mtDNA_ClassMammalia">Animalia_mtDNA_ClassMammalia</option>
-								<option value="Animalia_mtDNA_OrderPrimates">Animalia_mtDNA_OrderPrimates</option>
-								<option value="Animalia_mtDNA_Vertebrata">Animalia_mtDNA_Vertebrata</option>
-								<option value="Animalia_mtDNA_Ins_Mam_Amph">Animalia_mtDNA_Ins_Mam_Amph</option>
-								<option value="Fungi_mtDNA">Fungi_mtDNA</option>
-								<option value="Plants_mtDNA">Plants_mtDNA</option>
-								<option value="Protists_mtDNA">Protists_mtDNA</option>
-								<option value="Protists_ptDNA">Protists_ptDNA</option>
-								<option value="Archaea_nDNA">Archaea_nDNA</option>
-								<option value="Bacteria_nDNA">Bacteria_nDNA</option>
-								<option value="Viruses_HIV1">Viruses_HIV1</option>
-								<option value="Haplogroups_All">Haplogroups_All</option>
-							</select><br></dd>
-							<dt>Extra Sequences:</dt>
-							<dd>
-								<label><input type="radio" name="extrapointstype" value="ncbi" checked="checked">
-								Insert comma separated NCBI accession numbers</label><br>
-								<label><input type="radio" name="extrapointstype" value="fasta">
-								Load FASTA files</label><br>
-								<textarea id="extrancbi" rows="2" cols="40"></textarea>
-								<input type="file" id="fastafiles" name="fastafiles[]" multiple >
-								<output id="fastafilesinfo"></output>
-
-							</dd>
-
-							<dt>
-							<!-- Enter comma separated NCBI accessions --OR-- load FASTA files<br>
-							</dd> -->
-							</dl></p>
-
-							<p><input type="submit" id="loadrefmap" value="Continue"/></p>
-						</div>
-					</div>
-
-					<div class="panel panel-default" id="inputdatamenu">
-						<div class="panel-heading"><label>Settings of MoDMap selected</label></div>
-						<div class="panel-body">
-							<p><div id="allInputDataMinimized">
-								<a href="#" id="allInputDataShow">Show/Hide input data</a>
-							</div></p>
-
-							<div id="allInputData">
-								<dl class="dl-horizontal">
-									<dt>Length of k-mers:</dt>
-									<dd>
-										<select id="kmerslen">
-											<option value="3">3 bp</option>
-											<option value="4">4 bp</option>
-											<option value="5">5 bp</option>
-											<option value="6">6 bp</option>
-											<option value="7">7 bp</option>
-											<option value="8">8 bp</option>
-											<option value="9">9 bp</option>
-											<option value="10">10 bp</option>
-											<option value="11">11 bp</option>
-											<option value="12">12 bp</option>
-										</select>
-									</dd>
-									<dt>Get Taxonomy:</dt>
-									<dd>
-										<select id="getTaxa">
-											<option value="0">No (Fast)</option>
-											<option value="1">Yes (Slow)</option>
-										</select>
-									</dd>
-									<dt>Number of groups:</dt>
-									<dd id="selectnumofsets">
-										<select id="numofsets">
-											<option value="0">Choose</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-											<option value="5">5</option>
-											<option value="6">6</option>
-											<option value="7">7</option>
-											<option value="8">8</option>
-											<option value="9">9</option>
-											<option value="10">10</option>
-											<option value="11">11</option> 
-											<option value="12">12</option>
-											<option value="13">13</option>
-											<option value="14">14</option>
-											<option value="15">15</option> 
-										</select>
-									</dd>
-								</dl>
-
-								<div id="sets"></div>
-							</div>
-
-							<p><input type="submit" id="buildmap" value="Compute MoDMap" style="display:none;" /></p>
-						</div>
-					</div>
-
-					<div class="panel panel-default" id="computemenu">
-					<div class="panel-heading"><label>Computation Results</label></div>
-					<div class="panel-body">
-						<p id="stepstatus"></p>
-						<div id="mainprogressbar" style="display:none;">
-						  <div id="progress"></div>
-						</div>
-						<p id="file_contents"></p>
-					</div>
-					</div>
-
-				</div>
-			</div>
-			<div id="menu4" class="tab-pane fade">
+			<div id="about" class="tab-pane fade">
 				<p>
 				<dl class="dl-horizontal">
 					<dt>Coded by:</dt>
-					<dd>Rallis Karamichalis, 2016</dd>
+					<dd>Rallis Karamichalis, 2017</dd>
 					<dt>Github Code:</dt>
-					<dd><a href="http://github.com/rallis/MoDMaps3D/" target="_blank">http://github.com/rallis/MoDMaps3D/</a></dd>
-					<dt>HotKeys:</dt>
-					
-					<dd>
-						<div id="hotkeysshowhide"><a href="#">Show/Hide full list</a></div>
-						<div id="hotkeyslist">
-						While on canvas:
-						<ul>
-						<li>A = Move camera Left</li>
-						<li>D = Move camera Right</li>
-						<li>W = Move camera Up</li>
-						<li>S = Move camera Down</li>
-						<li>E = Zoom camera In</li>
-						<li>Q = Zoom camera Out</li>
-						<li>Ctrl + LeftArrow = Rotate Left</li>
-						<li>Ctrl + UpArrow = Rotate Up</li>
-						<li>Ctrl + RightArrow = Rotate Right</li>
-						<li>Ctrl + DownArrow = Rotate Down</li>
-						<li>Left Mouse Click + Drag = Rotate to any direction</li>
-						</ul>
-
-						General Shortcuts:
-						<ul>
-						<li>Ctrl + F = Search field</li>
-						<li>Ctrl + Alt + R = Reset Camera view, keeping rotation</li>
-						<li>Ctrl + Alt + M = Toggle visibility of right menu</li>
-						<li>Ctrl + Alt + N = Toggle visibility of left menu</li>
-						</ul>
-						</div>
-					</dd>
-					
+					<dd><a href="http://github.com/rallis/HaploMaps3D/" target="_blank">http://github.com/rallis/HaploMaps3D/</a></dd>					
 				</dl>
 				</p>	
 			</div>
