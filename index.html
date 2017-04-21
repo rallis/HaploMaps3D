@@ -14,10 +14,15 @@
 	<script type="text/javascript" src="js/jszip.min.js"></script>
 	<script type="text/javascript" src="js/FileSaver.min.js"></script>
 	<script type="text/javascript" src="js/parallel.js"></script>
-
+	<script type="text/javascript" src="js/seedrandom.js"></script>
+	<script type="text/javascript" src="js/jsfeat.js"></script>
+	<script type="text/javascript" src="js/clustering.js"></script>
+	
 
 	<script>
 	var dbg = false, errorHasOccured = false, dataset;
+	var randSeed = '12345';
+	var xmap;
 
 	function geturlparamvalue(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -92,8 +97,8 @@
 			this.finalEigenval = [];
 			this.finalPoints = [];
 			this.labelColors = ['blue', 'red', 'green', 'orange', 'magenta', 'yellow', 'brown', 'lime', 'gray', 'pink','cyan','seagreen', 'olive', 'purple', 'black'];
-			this.mapFileFormat = '';
-			this.mapTimeStamp = 0;
+			this.loadSequencesStart = '';
+			this.loadSequencesEnd = '';
 		}
 
 		toString (){ return "MoDMap ID= ["+this.id+"], Groups= ["+this.accIDsSets.length + "] each ["+this.totalNumOfSeqEachGroup+"] total= ["+this.accIDs.length+"], k= [" + this.kMer + "], Taxa= [" + this.taxaInfo+"], Description= ["+this.descr+"]"; }
@@ -107,7 +112,12 @@
 			this.allSequences[ind][4] = header;
 			if(this.taxaInfo){ this.calls2NCBI += 0.5; }else{ this.calls2NCBI += 1; }
 			if(localDBG){console.log("loadFastaCB: ",[ind,accID,output.length,'DONE']);}
-			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ this.computeDistMatrix(localDBG); }
+			if(this.calls2NCBI%100 == 0){ console.log('Completed '+this.calls2NCBI+' of '+this.totalNumOfSeq+' calls ('+(100*this.calls2NCBI/this.totalNumOfSeq).toFixed(2)+'%)'); }
+			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ 
+				this.loadSequencesEnd = + new Date();
+				console.log("loadSequences for ["+this.id+"] COMPLETED in ["+((this.loadSequencesEnd-this.loadSequencesStart)/1000)+"] sec");
+				this.computeDistMatrix(localDBG); 
+			}
 			// console.log("getFastaCB-NCBI: ",accID, this.calls2NCBI, this.totalNumOfSeq);
 		}	
 
@@ -134,7 +144,12 @@
 			this.allSequences[ind][2] = taxa;
 			if(this.taxaInfo){ this.calls2NCBI += 0.5; }else{ this.calls2NCBI += 1; }
 			if(localDBG){console.log("getTaxaCB: ["+accID+"]");}
-			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ this.computeDistMatrix(localDBG); }
+			if(this.calls2NCBI%100 == 0){ console.log('Completed '+this.calls2NCBI+' of '+this.totalNumOfSeq+' calls ('+(100*this.calls2NCBI/this.totalNumOfSeq).toFixed(2)+'%)'); }
+			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ 
+				this.loadSequencesEnd = + new Date();
+				console.log("loadSequences for ["+this.id+"] COMPLETED in ["+((this.loadSequencesEnd-this.loadSequencesStart)/1000)+"] sec");
+				this.computeDistMatrix(localDBG); 
+			}
 			// console.log("getTaxaCB-NCBI: ",accID, this.calls2NCBI, this.totalNumOfSeq);
 		}
 
@@ -160,6 +175,7 @@
 				this.error = true;
 				this.errorReason = 'Found '+this.accIDs.length+' sequences. Please enter at least 5 sequences and try again.';
 			}
+			this.loadSequencesStart = + new Date();
 			for(var i=0; i<this.accIDs.length; i++){
 				if(!this.error){
 					this.loadFastaFromNCBI(i, this.accIDs[i].trim(), this.loadFastaFromNCBICallback, this, localDBG);
@@ -170,6 +186,8 @@
 
 		computeDistMatrix(localDBG = false){
 			console.log("computeDistMatrix for ["+this.id+"]");	
+			var t1 = + new Date(), t2;
+
 			var dim = this.totalNumOfSeq;
 			for(var i=0; i<dim; i++){
 				this.distMatrix.push([]);
@@ -178,7 +196,7 @@
 				}
 			}
 			
-			var splitBy = Math.max(Math.ceil(dim/5), 50);
+			var splitBy = Math.min( Math.max(Math.ceil(dim/5), 50) , 100);
 			if(localDBG){ console.log("splitBy= ",splitBy); }
 			var input = []
 			for(var i=1; i<= Math.ceil(dim/splitBy); i++){
@@ -199,7 +217,7 @@
 				}
 			}
 			if(localDBG){ console.log("input= ",input); }
-			if(localDBG){ console.log('Parallel computation of '+input.length+' matrices of ~ '+Math.min(splitBy,this.totalNumOfSeq)+'x'+Math.min(splitBy,this.totalNumOfSeq)+' each. Please wait..'); }
+			console.log('Parallel computation of '+input.length+' matrices of ~ '+Math.min(splitBy,this.totalNumOfSeq)+'x'+Math.min(splitBy,this.totalNumOfSeq)+' each. Please wait..');
 
 			var p = new Parallel( input );
 			
@@ -208,7 +226,7 @@
 				var allSequencesX = chunk[4], allSequencesY = chunk[5], fcgrRes = chunk[6];
 				var res=[], tmpRow, numerator, denominator ;
 				var timeBegin = new Date();
-				console.log("Worker ["+bgX+","+endX+" - "+bgY+","+endY+"]");
+				// console.log("Worker ["+bgX+","+endX+" - "+bgY+","+endY+"]");
 				
 				for(var i = 0; i<allSequencesX.length; i++){
 					tmpRow=[];
@@ -227,7 +245,7 @@
 				}
 				
 				var timeEnd = new Date();
-				console.log("Worker ["+bgX+","+endX+" - "+bgY+","+endY+"] execution time: "+String((timeEnd-timeBegin)/1000)+" sec");
+				console.log("Worker ["+bgX+","+endX+" - "+bgY+","+endY+"] in ["+String((timeEnd-timeBegin)/1000)+"] sec");
 				return [bgX, endX, bgY, endY, res];
 			};
 
@@ -248,13 +266,16 @@
 				}
 
 				if(localDBG){ console.log(this.distMatrix); }
+				t2 = + new Date();
+				console.log("computeDistMatrix for ["+this.id+"]  COMPLETED in ["+((t2-t1)/1000)+"] sec");
 				this.computeMDS(localDBG);
 			  });
 		}
 
 		computeMDS(localDBG = false){
 			console.log("computeMDS for ["+this.id+"]"); 	
-			
+			var t1 = + new Date(), t2;
+
 			// pre-processign MDS
 			// part 1
 			var numOfSeq = this.totalNumOfSeq;
@@ -285,21 +306,42 @@
 				}
 			}
 
-			// part 4
-			// EIGENVALUES - EIGENVECTORS
-			var res2, eigenval, eigenvec, eigensystem;
-			try{
-				res2 = numeric.eig(distMatrixCentered);	
-			}catch(err){
-				console.log(err.message);
-				this.error = true;
-				this.errorReason = 'MDS ERROR ['+err.message+'] on MoDMap3D ['+this.id+']. Internal errors originate from numerical errors in distance matrices. Consider changing/increasing value of length of k-mers';
-				return;
+			// part 4 NEW MDS
+			var data_type = jsfeat.F64_t | jsfeat.C1_t;
+			var columns = numOfSeq, rows = numOfSeq;
+			var my_matrix = new jsfeat.matrix_t(columns, rows, data_type);
+			my_matrix.data = [].concat.apply([], distMatrixCentered);    
+			var my_eigenvec = new jsfeat.matrix_t(columns, rows, data_type);
+			var my_eigenval = new jsfeat.matrix_t(columns, rows, data_type);
+			jsfeat.linalg.eigenVV(my_matrix, my_eigenvec, my_eigenval);
+			
+			var eigenval, eigenvec, eigensystem;
+			eigenval = my_eigenval.data;
+			eigenvec = [];
+			for( var mdsInd = 0; mdsInd < numOfSeq; mdsInd++){
+				eigenvec.push(my_eigenvec.data.slice( mdsInd*numOfSeq, (mdsInd+1)*numOfSeq ));
 			}
-			if(localDBG){console.log('numeric.js=',res2['lambda']['x']);}
+			
+			// NEW MDS LOG
+			// console.log("eigenval!! =",eigenval);
+			// console.log("eigenvec!! =",eigenvec);
+			// console.log("len(val)=",eigenval.length);
+			// console.log("len(vec)=",eigenvec.length);
 
-			eigenval = res2['lambda']['x'];
-			eigenvec = numeric.transpose(res2['E']['x']);   /// here transpose!!!
+			// OLD MDS
+			// var res2, eigenval, eigenvec, eigensystem;
+			// try{
+			// 	res2 = numeric.eig(distMatrixCentered);	
+			// }catch(err){
+			// 	console.log(err.message);
+			// 	this.error = true;
+			// 	this.errorReason = 'MDS ERROR ['+err.message+'] on MoDMap3D ['+this.id+']. Internal errors originate from numerical errors in distance matrices. Consider changing/increasing value of length of k-mers';
+			// 	// return;
+			// }
+			// if(localDBG){console.log('numeric.js=',res2['lambda']['x']);}
+			// eigenval = res2['lambda']['x'];
+			// eigenvec = numeric.transpose(res2['E']['x']);   /// here transpose!!!
+			
 			eigensystem =[];
 			for(var i=0; i<numOfSeq; i++){
 				eigensystem.push([eigenval[i], eigenvec[i]]);
@@ -315,7 +357,7 @@
 					this.finalEigenvec.push(eigensystem[i][1]);
 					this.finalEigenval.push(eigensystem[i][0]);
 				}
-				if(localDBG){console.log("i-th eigeinvalue= [",i,"] [",eigensystem[i][0],"]");}
+				if(localDBG){console.log("i-th eigenvalue= [",i,"] [",eigensystem[i][0],"]");}
 				if(this.finalEigenvec.length === 5){break;}
 			}
 			if(localDBG){console.log("finalEigenval=",this.finalEigenval);}
@@ -344,7 +386,14 @@
 			}
 			if(localDBG){console.log("finalPoints=",this.finalPoints);}
 
-			// part 9
+			t2 = + new Date();
+			console.log("computeMDS for ["+this.id+"] COMPLETED in ["+((t2-t1)/1000)+"] sec");
+			this.toTextFile(localDBG);
+			this.applyDBSCAN(localDBG);
+		}	
+	
+		toTextFile(localDBG = false){
+			if(localDBG){ console.log("toTextFile for ["+this.id+"]"); }
 			// PRODUCING MAPFILE
 			var mapfile = '';
 			// line 1
@@ -353,7 +402,7 @@
 			}
 			mapfile = mapfile.slice(0,-1);
 			mapfile += "\n";
-			// line 2
+			// line 2 
 			for(var i=0; i<this.accIDsSets.length; i++){
 				mapfile += this.labelColors[i] + ",";
 			}
@@ -373,7 +422,6 @@
 			}
 			mapfile = mapfile.slice(0,-1);
 			mapfile += "\n";
-			
 			// line 7
 			for(var i=0; i<this.accIDsSets.length; i++){
 				mapfile += this.namesets[i] + ', ';
@@ -383,7 +431,7 @@
 			// old mapfile
 			mapfile += '#'+this.descr+'#'+this.accIDs.length+"#Approx.Inf.Dist#NA\n";
 			// rest of the lines
-			for(var i=0; i<numOfSeq; i++){
+			for(var i=0; i<this.totalNumOfSeq; i++){
 				for(var j=0; j<this.finalPoints[i].length; j++){
 					// mapfile += ((2*points[i][j] - allMinMax[j][0] - allMinMax[j][1]) / ( allMinMax[j][1] - allMinMax[j][0] ) ) +"\n";	
 					mapfile += this.finalPoints[i][j] +"\n";	
@@ -397,14 +445,11 @@
 			mapfile = mapfile.slice(0,-1);
 			if(localDBG){console.log("c/p=\n",mapfile);}
 
-			this.mapFileFormat = mapfile;
 
-			var mapTimeStamp = new Date().getTime();
-			this.mapTimeStamp = mapTimeStamp;
 			if(typeof(Storage) !== "undefined") {
 				try{
-					localStorage.setItem("mapfile"+this.mapTimeStamp, this.mapFileFormat);
-					localStorage.setItem("distMatrix"+this.mapTimeStamp, this.distMatrix);	
+					localStorage.setItem("mapfile"+this.id, mapfile);
+					// localStorage.setItem("distMatrix"+this.id, this.distMatrix);	
 				}catch(err){
 					console.log(err.message);
 					this.error = true;
@@ -422,9 +467,36 @@
 			// for (var a in localStorage){ delete localStorage[a]; }
 		
 			// change this accordingly
-			$("#result").html( $("#result").html() + '<a href="./load.html?mapid=local'+this.mapTimeStamp+'" target="_blank">Show MoDMap</a>');			
+			$("#result").html( $("#result").html() + '<a href="./load.html?mapid=local'+this.id+'" target="_blank">Show MoDMap</a>');			
 			console.log(this);
-		}	
+		}
+
+		applyDBSCAN(localDBG = false){
+			console.log("start DBSCAN");
+			var dbscan = new DBSCAN();
+			var datasetOfPoints = [];
+			for(var i=0; i < this.finalPoints.length; i++){
+				datasetOfPoints.push(this.finalPoints[i].slice(0,3));
+			} 
+			if(localDBG){ console.log("dataset has been  formed"); }
+
+			// [
+			// 	[1, 1], [0, 1], [1, 0],
+			// 	[10, 10], [10, 13], [13, 13],
+			// 	[30, 30], [30, 33], [49, 49], [33, 33], [36, 36]
+			// ];
+			// parameters: 
+			// 5 - neighborhood radius, 
+			// 2 - number of points in neighborhood to form a cluster
+			var clusters = dbscan.run(datasetOfPoints, 0.2, 5);
+			var noise  = dbscan.noise;
+			console.log(clusters, noise);
+			for(var i=0; i<noise.length; i++){
+				console.log(this.allSequences[noise[i]]);
+			}
+			console.log("end DBSCAN");
+		}
+
 	}
 
 	function selectHaplo(arr, typeHaplo){ return arr.filter(selectHaploHelp(typeHaplo)); }
@@ -438,12 +510,40 @@
 			}
 		}
 	}
+
+	function getRandomInt(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
 	
-	function buildMoDMapForHaplogroups(haplos, howmany = 50, kMer = 9, taxaInfo = true, localDBG = false){
-		var datasetToPlot = [], accToPlot = [], tmpSel = [];
+	function buildMoDMapForHaplogroups(haplos, howmany = 50, kMer = 9, taxaInfo = true, namesets = [], localDBG = false){
+		Math.seedrandom(randSeed); // you set it once
+		var datasetToPlot = [], accToPlot = [], tmpSel = [], finalSel = [], randSample = [], randInd = -1;
 		for (var i = 0; i < haplos.length; i++) {
+			randSample = [];
+			randInd = -1;
 			tmpSel = selectHaplo(dataset, haplos[i]);
-			datasetToPlot.push(tmpSel);
+			finalSel = [];
+			if(tmpSel.length > howmany){
+				while( randSample.length < howmany){
+					randInd = getRandomInt(0, tmpSel.length);
+					if(!(randInd in randSample)){
+						randSample.push(randInd);
+					}else{
+						// console.log("it is already!");
+					}
+				}
+			}else{
+				for(var j=0; j<tmpSel.length; j++){
+					randSample.push(j);
+				}
+			}
+			if(localDBG){ console.log(randSample); }
+			for(var j=0; j<randSample.length; j++){
+				finalSel.push(tmpSel[randSample[j]]);
+			}
+			datasetToPlot.push(finalSel);
 		}
 		
 		for(var i=0; i<datasetToPlot.length; i++){
@@ -454,7 +554,7 @@
 		}
 		if(localDBG){ console.log(accToPlot); }
 
-		var curHaploMap = new MoDMap3D( accToPlot, kMer, taxaInfo);
+		var curHaploMap = new MoDMap3D( accToPlot, kMer, taxaInfo, namesets);
 		return curHaploMap;
 	}
 	
@@ -479,14 +579,14 @@
 
 		$("#startHaplo").click(function(){
 
-			var ls1 = [ "L1", "L2", "L3", "L4", "L5"];
+			var ls1 = [ "L1", "L2", "L3", "L4", "L5", "H"];
 			var ls2 = [ "L1a", "L1b", "L1c"];
 			var ls3 = [ "N", "X", "Y"];
 			var ls4 = [ "O", "p", "H"];
 			var ls5 = [ "L3", "M", "Q"];
 
 
-			var xmap = buildMoDMapForHaplogroups(ls5, 30, 9, true, true);
+			xmap = buildMoDMapForHaplogroups(ls5, 200, 9, true, ls5);
 			xmap.print();
 			xmap.loadSequences(false);
 
