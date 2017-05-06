@@ -22,50 +22,8 @@ var gglSearchEnabled = MoDMaps3D['gglSearchEnabled'];
 var realtimeHighlight = MoDMaps3D['realtimeHighlight'];
 var selectOnMouseover = MoDMaps3D['selectonmouseover'];
 var highlightColor = MoDMaps3D['highlightColor'];   
-var mapsWithReadyFCGRs = {
-	'Animalia_mtDNA_ClassAmphibia.txt':'mtDNA', 
-	'Animalia_mtDNA_ClassInsecta.txt':'mtDNA', 
-	'Animalia_mtDNA_ClassMammalia.txt':'mtDNA', 
-	'Animalia_mtDNA_OrderPrimates.txt':'mtDNA', 
-	'Animalia_mtDNA_Vertebrata.txt':'mtDNA', 
-	'Animalia_mtDNA_Ins_Mam_Amph.txt':'mtDNA',
-	'Fungi_mtDNA.txt':'mtDNA', 
-	'Plants_mtDNA.txt':'mtDNA', 
-	'Protists_mtDNA.txt':'mtDNA', 
-	'H.sapiens_P.troglodytes_nDNA+mtDNA.txt':'index_animalia', 
-	'B.oleracea_B.napus_nDNA+cpDNA.txt':'index_plants', 
-	'E.coli_E.fergusonii_nDNA+pDNA.txt':'index_bacteria', 
-	'Bacteria_nDNA.txt':'nDNA_bacteria', 
-	'Archaea_nDNA.txt':'nDNA_archaea',
-	'Protists_ptDNA.txt':'ptDNA',
-	'Vir1_NCBI.txt':'vir',
-	'Vir2_subsetOf_Vir1.txt':'vir',
-	'Vir3_subsetOf_Vir2.txt':'vir',
-	'Vir4_subsetOf_Vir3.txt':'vir',
-	'Viruses_HIV1.txt':'hiv1'
-};
-var mapsWithReadyDistMatrix = {
-	'Animalia_mtDNA_ClassAmphibia.txt':'amphibians', 
-	'Animalia_mtDNA_ClassInsecta.txt':'insects', 
-	'Animalia_mtDNA_ClassMammalia.txt':'mammals', 
-	'Animalia_mtDNA_OrderPrimates.txt':'primates', 
-	'Animalia_mtDNA_Vertebrata.txt':'vertebrata', 
-	'Animalia_mtDNA_Ins_Mam_Amph.txt':'ins_mam_amphi',
-	'Fungi_mtDNA.txt':'fungi', 
-	'Plants_mtDNA.txt':'plants', 
-	'Protists_mtDNA.txt':'protistsmt', 
-	'H.sapiens_P.troglodytes_nDNA+mtDNA.txt':'index_animalia', 
-	'B.oleracea_B.napus_nDNA+cpDNA.txt':'index_plants', 
-	'E.coli_E.fergusonii_nDNA+pDNA.txt':'index_bacteria', 
-	'Bacteria_nDNA.txt':'bacteria', 
-	'Archaea_nDNA.txt':'archaea',
-	'Protists_ptDNA.txt':'protistspt',
-	'Vir1_NCBI.txt':'vir1',
-	'Vir2_subsetOf_Vir1.txt':'vir2',
-	'Vir3_subsetOf_Vir2.txt':'vir3',
-	'Vir4_subsetOf_Vir3.txt':'vir4',
-	'Viruses_HIV1.txt':'hiv1'
-};
+var mapsWithReadyFCGRs = {};
+var mapsWithReadyDistMatrix = {};
 var mapid, dim1, dim2, dim3, radius, alldata, distMatrix = [];
 var setOfPoints, colors, numberOfLabels, namesOfLabels, legendColors, legendLabels; 
 var globalScaledPointsCoord, globalPointsLabels;      
@@ -277,24 +235,71 @@ function computeDist(){
 	if(($("#fromHere").val()!="")&&($("#toHere").val()!="")){
 		$("#computeDist").html('<img src="img/loading.gif" height="30">');
 		var dMatSplitBy = 100;
-		// var idFrom=parseInt($("#fromHere").val())  ;
-		// var idTo=parseInt($("#toHere").val()) ;
-		var idFrom=parseInt(fromIndex);
-		var idTo=parseInt(toIndex);
+		var idFrom = $("#fromHere").val();
+		var idTo = $("#toHere").val();
+		
+		// var idFrom=parseInt(fromIndex);
+		// var idTo=parseInt(toIndex);
 		console.log(idFrom, idTo);
-		var rowInd = Math.ceil(Math.min(idFrom,idTo)/dMatSplitBy);
-		var colInd = Math.ceil(Math.max(idFrom,idTo)/dMatSplitBy);
-		var rowmin = dMatSplitBy*(rowInd-1) + 1;
-		var rowmax = dMatSplitBy*rowInd ;
-		var colmin = dMatSplitBy*(colInd-1) + 1;
-		var colmax = dMatSplitBy*colInd ;
-		var localrowInd = Math.min(idFrom,idTo)%dMatSplitBy;
-		var localcolInd = Math.max(idFrom,idTo)%dMatSplitBy;
-		if(localrowInd == 0){localrowInd = dMatSplitBy;}
-		if(localcolInd == 0){localcolInd = dMatSplitBy;}
+		
 
-		console.log(rowmin, rowmax,"--",colmin, colmax,"---", localrowInd, localcolInd);
-		console.log("./dists/"+mapsWithReadyDistMatrix[mapid]+"/dSubMat_"+rowmin+"_"+rowmax+"_"+colmin+"_"+colmax+".txt");
+		// function computeAIDdist(){
+		// 	console.log("aid start");
+		// 	$("#aidinfo").empty();
+		// 	$("#aidinfomenu").slideDown();
+		// 	$("#aidinfo").html('<img src="img/loading.gif" width="30" height="30"/>');
+		// 	console.log($("#seq0").val());
+		// 	console.log($("#seq1").val());
+		// 	errorHasOccured = false;
+
+		// 	var gotBothSequences = 0;
+		// 	for (var indSeq=0; indSeq<2; indSeq++){
+		// 		loadFastaFromNCBI(indSeq, $("#seq"+indSeq).val(), function(ind, accID, output, header){
+		// 			aidDistInfo[ind] = [accID, header, output.length,  buildFCGR(output, fcgrRes)];
+		// 			if(dbg){console.log([ind,accID,output.length, header,'DONE']);}
+					
+		// 			gotBothSequences += 1;
+		// 			if(gotBothSequences == 2 && !errorHasOccured){
+						
+		// 				console.log("finished computation");
+		// 				var aidinfotext = "<strong>NCBI: ["+aidDistInfo[0][0]+"]</strong> - Length: "+aidDistInfo[0][2]+"<br>Header: "+aidDistInfo[0][1]+"<br><br> <strong>NCBI: ["+aidDistInfo[1][0]+"]</strong> - Length: "+aidDistInfo[1][2]+"<br>Header: "+aidDistInfo[1][1]+"<br><br>";
+						
+		// 				var aidnumerator = aidDistInfo[0][3]['size'] + aidDistInfo[1][3]['size'];
+		// 				var aiddenominator=0;
+		// 				for(var unionInd=0; unionInd<Math.pow(4,fcgrRes); unionInd++){
+		// 					if( (aidDistInfo[0][3]['flatFCGR'][unionInd]==1) || (aidDistInfo[1][3]['flatFCGR'][unionInd]==1) ){
+		// 						aiddenominator++;
+		// 					} 
+		// 				}
+		// 				console.log(aidnumerator,aiddenominator,2 - aidnumerator*1.0/aiddenominator);
+						
+		// 				aidinfotext += "<strong>AID: </strong>"+ String((2 - aidnumerator*1.0/aiddenominator).toFixed(5));
+		// 				$("#aidinfo").html(aidinfotext);
+
+
+		// 			}
+
+		// 		});	
+		// 	}
+
+		// 	console.log("aid end");
+		// }
+
+
+
+
+		// var rowInd = Math.ceil(Math.min(idFrom,idTo)/dMatSplitBy);
+		// var colInd = Math.ceil(Math.max(idFrom,idTo)/dMatSplitBy);
+		// var rowmin = dMatSplitBy*(rowInd-1) + 1;
+		// var rowmax = dMatSplitBy*rowInd ;
+		// var colmin = dMatSplitBy*(colInd-1) + 1;
+		// var colmax = dMatSplitBy*colInd ;
+		// var localrowInd = Math.min(idFrom,idTo)%dMatSplitBy;
+		// var localcolInd = Math.max(idFrom,idTo)%dMatSplitBy;
+		// if(localrowInd == 0){localrowInd = dMatSplitBy;}
+		// if(localcolInd == 0){localcolInd = dMatSplitBy;}
+		// console.log(rowmin, rowmax,"--",colmin, colmax,"---", localrowInd, localcolInd);
+		// console.log("./dists/"+mapsWithReadyDistMatrix[mapid]+"/dSubMat_"+rowmin+"_"+rowmax+"_"+colmin+"_"+colmax+".txt");
 
 		$.ajax({
 			url: "./dists/"+mapsWithReadyDistMatrix[mapid]+"/dSubMat_"+rowmin+"_"+rowmax+"_"+colmin+"_"+colmax+".txt",
@@ -319,16 +324,6 @@ function computeDist(){
 				$("#computeDist").html('STATUS=['+status+'] ERROR=['+error+']');
 			}
 		});
-
-		// $("#outputDist").val('');
-		// $("#computeDist").html('<img src="img/loading.gif" height="30">');
-		// idFrom=parseFloat(globalPointsLabels[idFrom][0]);
-		// idTo=parseFloat(globalPointsLabels[idTo][0]);
-		// // old method, only upper triangular
-		// // var res=dists[(idFrom-1)*howmany+idTo-1];
-		// var res=dists[idFrom][idTo];
-		// if(preload!=true){$("#outputDist").val(res);}
-		// $("#computeDist").html('');
 	}
 }
 
@@ -861,7 +856,7 @@ function initGraphics(){
 	<div id="searchstatus"></div><hr color="white" width="60%">';
 
 	// DISTPOINTS DIV
-	if(mapid in mapsWithReadyDistMatrix){
+	if(true /*mapid in mapsWithReadyDistMatrix*/){
 		distPointsDiv.innerHTML = '<em><strong><font color="yellow" size="4">Distance between Points</font></strong></em><br>\
 			<table border="0">\
 			<tr>\

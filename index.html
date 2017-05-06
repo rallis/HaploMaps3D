@@ -23,6 +23,11 @@
 	var dbg = false, errorHasOccured = false, dataset;
 	var randSeed = '12345';
 	var xmap;
+	var mtDNAquery;  
+	var runLocally = true;
+	var typeOfClusteringGlobal = "kmeans";
+	var searchTree, proceedToNextMap = false;
+	var myTimer;
 
 	function geturlparamvalue(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -88,7 +93,7 @@
 				if(noNameSet ){ this.namesets.push("NA"); }
 				for(var j=0; j<this.accIDsSets[i].length; j++){
 					this.totalNumOfSeq += 1;
-					this.allSequences.push(["", "", "", "", "" ]);
+					this.allSequences.push(["", "", "NA", "", "" ]);
 					this.accIDs.push(this.accIDsSets[i][j]);
 				}
 			}
@@ -99,9 +104,12 @@
 			this.labelColors = ['blue', 'red', 'green', 'orange', 'magenta', 'yellow', 'brown', 'lime', 'gray', 'pink','cyan','seagreen', 'olive', 'purple', 'black'];
 			this.loadSequencesStart = '';
 			this.loadSequencesEnd = '';
+			this.clusters_found = [];
+			this.clustering_assignment = [];
+			this.clusters_composition = [];
 		}
 
-		toString (){ return "MoDMap ID= ["+this.id+"], Groups= ["+this.accIDsSets.length + "] each ["+this.totalNumOfSeqEachGroup+"] total= ["+this.accIDs.length+"], k= [" + this.kMer + "], Taxa= [" + this.taxaInfo+"], Description= ["+this.descr+"]"; }
+		toString (){ return "MoDMap ID= ["+this.id+"], Groups= ["+this.accIDsSets.length + "] each ["+this.totalNumOfSeqEachGroup+"] total= ["+this.accIDs.length+"], k= [" + this.kMer + "], Taxa= [" + this.taxaInfo+"], Description= ["+this.descr+"], Namesets= ["+this.namesets+"]"; }
 
 		print (){ console.log( this.toString() ); }
 
@@ -110,7 +118,7 @@
 			this.allSequences[ind][1] = output.length;
 			this.allSequences[ind][3] = buildFCGR(output, this.kMer, accID, localDBG);
 			this.allSequences[ind][4] = header;
-			if(this.taxaInfo){ this.calls2NCBI += 0.5; }else{ this.calls2NCBI += 1; }
+			if(this.taxaInfo && !runLocally){ this.calls2NCBI += 0.5; }else{ this.calls2NCBI += 1; }
 			if(localDBG){console.log("loadFastaCB: ",[ind,accID,output.length,'DONE']);}
 			if(this.calls2NCBI%100 == 0){ console.log('Completed '+this.calls2NCBI+' of '+this.totalNumOfSeq+' calls ('+(100*this.calls2NCBI/this.totalNumOfSeq).toFixed(2)+'%)'); }
 			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ 
@@ -122,8 +130,15 @@
 		}	
 
 		loadFastaFromNCBI(ind, accID, callback, callbackObj, localDBG = false){
+			var urlToLoad;
+			// console.log("runLocally=",runLocally);
+			if(runLocally){ 
+				urlToLoad = "http://localhost/haplomaps3d/allfiles/"+accID+".fasta"; 
+			}else{
+				urlToLoad = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=fasta&retmode=text&id="+accID;
+			}
 			$.ajax({
-				url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=fasta&retmode=text&id="+accID,
+				url: urlToLoad,
 				success: function(result){
 					var data = result.split(/\n\r?/gi);
 					var header;
@@ -142,7 +157,7 @@
 
 		getTaxaFromNCBICallback (ind, accID, taxa, localDBG = false){
 			this.allSequences[ind][2] = taxa;
-			if(this.taxaInfo){ this.calls2NCBI += 0.5; }else{ this.calls2NCBI += 1; }
+			if(this.taxaInfo){ this.calls2NCBI += 0.5; }
 			if(localDBG){console.log("getTaxaCB: ["+accID+"]");}
 			if(this.calls2NCBI%100 == 0){ console.log('Completed '+this.calls2NCBI+' of '+this.totalNumOfSeq+' calls ('+(100*this.calls2NCBI/this.totalNumOfSeq).toFixed(2)+'%)'); }
 			if(this.calls2NCBI == this.totalNumOfSeq && !this.error){ 
@@ -179,7 +194,7 @@
 			for(var i=0; i<this.accIDs.length; i++){
 				if(!this.error){
 					this.loadFastaFromNCBI(i, this.accIDs[i].trim(), this.loadFastaFromNCBICallback, this, localDBG);
-					if(this.taxaInfo){ this.getTaxaFromNCBI(i, this.accIDs[i].trim(), this.getTaxaFromNCBICallback, this, localDBG); }
+					if(this.taxaInfo && !runLocally){ this.getTaxaFromNCBI(i, this.accIDs[i].trim(), this.getTaxaFromNCBICallback, this, localDBG); }
 				}
 			}
 		}
@@ -322,25 +337,9 @@
 				eigenvec.push(my_eigenvec.data.slice( mdsInd*numOfSeq, (mdsInd+1)*numOfSeq ));
 			}
 			
-			// NEW MDS LOG
-			// console.log("eigenval!! =",eigenval);
-			// console.log("eigenvec!! =",eigenvec);
-			// console.log("len(val)=",eigenval.length);
-			// console.log("len(vec)=",eigenvec.length);
-
-			// OLD MDS
-			// var res2, eigenval, eigenvec, eigensystem;
-			// try{
-			// 	res2 = numeric.eig(distMatrixCentered);	
-			// }catch(err){
-			// 	console.log(err.message);
-			// 	this.error = true;
-			// 	this.errorReason = 'MDS ERROR ['+err.message+'] on MoDMap3D ['+this.id+']. Internal errors originate from numerical errors in distance matrices. Consider changing/increasing value of length of k-mers';
-			// 	// return;
-			// }
-			// if(localDBG){console.log('numeric.js=',res2['lambda']['x']);}
-			// eigenval = res2['lambda']['x'];
-			// eigenvec = numeric.transpose(res2['E']['x']);   /// here transpose!!!
+			if( eigenvec.length == 0  || eigenval.length == 0){
+				console.log("ERRROR!! handle it!!!");
+			}
 			
 			eigensystem =[];
 			for(var i=0; i<numOfSeq; i++){
@@ -388,10 +387,153 @@
 
 			t2 = + new Date();
 			console.log("computeMDS for ["+this.id+"] COMPLETED in ["+((t2-t1)/1000)+"] sec");
-			this.toTextFile(localDBG);
-			this.applyDBSCAN(localDBG);
+			this.applyClustering(typeOfClusteringGlobal, localDBG);
 		}	
+
+		applyClustering(typeOfClustering = "kmeans", localDBG = false){
+			console.log("start CLUSTERING",typeOfClustering);
+			
+			for (var i = 0; i < this.accIDs.length; i++) { this.clustering_assignment.push(-1); }
+			
+			// select the points' coordinates to apply clustering
+			var datasetOfPoints = [];
+			for(var i=0; i < this.finalPoints.length; i++){ datasetOfPoints.push(this.finalPoints[i].slice(0,3)); } 
+			if(localDBG){ console.log("dataset has been formed"); }
+
+			// dbscan
+			if(typeOfClustering == "dbscan"){
+				var dbscan = new DBSCAN();
+				var clusters_dbscan = dbscan.run(datasetOfPoints, 0.2, 5);
+				var noise_dbscan  = dbscan.noise;
+				console.log("clusters-DBSCAN=",clusters_dbscan);
+				console.log("noise-DBSCAN=",noise_dbscan);
+				if(localDBG){
+					for(var i=0; i<noise_dbscan.length; i++){
+						console.log(this.allSequences[noise_dbscan[i]]);
+					}	
+				}
+				this.clusters_found = clusters_dbscan;	
+			}
+			
+			// optics
+			if( typeOfClustering == "optics"){
+				var optics = new OPTICS();
+				var clusters_optics = optics.run(datasetOfPoints, 0.2, 5);
+				console.log("clusters-OPTICS=",clusters_optics);
+				if(localDBG){
+					var plot_optics = optics.getReachabilityPlot();
+					console.log("reachability-plot=",plot_optics);
+				}
+				this.clusters_found = clusters_optics;
+			}
 	
+			// kmeans
+			if(typeOfClustering == "kmeans"){
+				var kmeans = new KMEANS();
+				var clusters_kmeans = kmeans.run(datasetOfPoints, 3);
+				var noise_kmeans  = kmeans.noise;
+				console.log("clusters-KMEANS=",clusters_kmeans);
+				this.clusters_found = clusters_kmeans;
+			}
+	
+			var clusters_size = this.totalNumOfSeqEachGroup;
+			var clusters_from_clustering = this.clusters_found;			
+			
+			// print and store cluster composition for each cluster returned by clustering method above
+			var cur_clust;
+			var cur_clust_res;
+			for (var i = 0; i < clusters_from_clustering.length; i++) {
+				this.clusters_composition.push([]);
+				cur_clust = clusters_from_clustering[i];
+				cur_clust_res = {"tot": 0};
+				for (var j = 0; j < cur_clust.length; j++) {
+					// console.log(cur_clust[j]);
+					var left_int = 0;
+					for (var k = 0; k < clusters_size.length; k++) {
+						left_int += clusters_size[k];
+						if(cur_clust[j] < left_int){
+							cur_clust_res["tot"] += 1;
+							if( k in cur_clust_res){
+								cur_clust_res[k] += 1;
+							}else{
+								cur_clust_res[k] = 1;
+							}
+							// console.log(k);
+							break;
+						}
+					}		
+				}
+				var out = "Tot: "+cur_clust_res["tot"]+" = ";
+				for (var m = 0; m < clusters_size.length; m++) {
+					// out += m+": ";
+					if(cur_clust_res[m]){
+						out += cur_clust_res[m]+" ";
+						this.clusters_composition[i].push(cur_clust_res[m]);
+					}else{
+						out += "NA ";
+						this.clusters_composition[i].push(0);
+					}
+				}
+				if(/*localDBG*/ true){ console.log(out); }
+			}
+
+			// compute clustering assignment
+			for (var i = 0; i < clusters_from_clustering.length; i++) {
+				if(localDBG){ console.log("current cluster is = ", clusters_from_clustering[i]); }
+				
+				// detect in which cluster each element of this cluster falls
+				cur_clust_res = {};	
+				for (var j = 0; j < clusters_from_clustering[i].length; j++) {
+					var left_int = 0;
+					for (var k = 0; k < clusters_size.length; k++) {
+						left_int += clusters_size[k];
+						if(clusters_from_clustering[i][j] < left_int){
+							if( k in cur_clust_res){
+								cur_clust_res[k] += 1;
+							}else{
+								cur_clust_res[k] = 1;
+							}
+							break;
+						}
+					}
+				}
+				if(localDBG){ console.log(cur_clust_res); }
+
+				// detect the majority
+				var final_cluster = -1;
+				var cur_max = -1;
+				for (var j = 0; j < this.accIDsSets.length; j++) {
+					if (j in cur_clust_res){
+						if(cur_clust_res[j] > cur_max){
+							final_cluster = j;
+							cur_max = cur_clust_res[j];
+						}
+					}
+				}
+				if(localDBG){ console.log(final_cluster); }
+			
+				// assign the correct cluster
+				for (var j = 0; j < clusters_from_clustering[i].length; j++) {
+					this.clustering_assignment[ clusters_from_clustering[i][j] ] = final_cluster;
+				}
+				if(localDBG){ console.log(this.clustering_assignment); }
+			}
+			console.log("clustering_assignment= ",this.clustering_assignment);
+			console.log("end CLUSTERING");
+			
+			this.endOfMoDMap(localDBG);
+		}
+	
+		endOfMoDMap(localDBG = false){
+			console.log(this);
+			this.toTextFile(localDBG);
+			proceedToNextMap = true;
+			if(this.clustering_assignment[this.clustering_assignment.length - 1] == -1){
+				proceedToNextMap = false;
+				clearInterval(myTimer);
+			}
+		}
+
 		toTextFile(localDBG = false){
 			if(localDBG){ console.log("toTextFile for ["+this.id+"]"); }
 			// PRODUCING MAPFILE
@@ -468,34 +610,8 @@
 		
 			// change this accordingly
 			$("#result").html( $("#result").html() + '<a href="./load.html?mapid=local'+this.id+'" target="_blank">Show MoDMap</a>');			
-			console.log(this);
 		}
 
-		applyDBSCAN(localDBG = false){
-			console.log("start DBSCAN");
-			var dbscan = new DBSCAN();
-			var datasetOfPoints = [];
-			for(var i=0; i < this.finalPoints.length; i++){
-				datasetOfPoints.push(this.finalPoints[i].slice(0,3));
-			} 
-			if(localDBG){ console.log("dataset has been  formed"); }
-
-			// [
-			// 	[1, 1], [0, 1], [1, 0],
-			// 	[10, 10], [10, 13], [13, 13],
-			// 	[30, 30], [30, 33], [49, 49], [33, 33], [36, 36]
-			// ];
-			// parameters: 
-			// 5 - neighborhood radius, 
-			// 2 - number of points in neighborhood to form a cluster
-			var clusters = dbscan.run(datasetOfPoints, 0.2, 5);
-			var noise  = dbscan.noise;
-			console.log(clusters, noise);
-			for(var i=0; i<noise.length; i++){
-				console.log(this.allSequences[noise[i]]);
-			}
-			console.log("end DBSCAN");
-		}
 
 	}
 
@@ -517,7 +633,7 @@
 		return Math.floor(Math.random() * (max - min)) + min;
 	}
 	
-	function buildMoDMapForHaplogroups(haplos, howmany = 50, kMer = 9, taxaInfo = true, namesets = [], localDBG = false){
+	function buildMoDMapForHaplogroups(mtDNAquery, haplos, howmany = 50, kMer = 9, taxaInfo = true, namesets = [], localDBG = false){
 		Math.seedrandom(randSeed); // you set it once
 		var datasetToPlot = [], accToPlot = [], tmpSel = [], finalSel = [], randSample = [], randInd = -1;
 		for (var i = 0; i < haplos.length; i++) {
@@ -552,14 +668,72 @@
 				if(datasetToPlot[i].length > j){ accToPlot[i].push(datasetToPlot[i][j][2]); }
 			}
 		}
+		if(localDBG){ console.log("mtDNAquery=", mtDNAquery); }
+		if(mtDNAquery != ""){ accToPlot.push([mtDNAquery]); }
 		if(localDBG){ console.log(accToPlot); }
 
 		var curHaploMap = new MoDMap3D( accToPlot, kMer, taxaInfo, namesets);
 		return curHaploMap;
 	}
 	
+	function continueTreeExploration(){
+		if(proceedToNextMap){
+			proceedToNextMap = false;
+			console.log("Moving to next MoDMap..");
+
+			// find in which cluster the last point is (the mtDNAquery)
+			var choosen_cluster = -1;
+			for (var i = 0; i < xmap.clusters_composition.length; i++) {
+				if(xmap.clusters_composition[i][xmap.accIDsSets.length - 1] != 0){
+					choosen_cluster = i;
+					break;
+				}
+			}
+			console.log("choosen_cluster= ",choosen_cluster);
+
+			// select all haplo
+			var choosen_haplo_inds = [];
+			for (var i = 0; i < xmap.clusters_composition[choosen_cluster].length - 1; i++) {
+				console.log("i=",i);
+				// -1 because last nameset is always mtDNAquery !!
+				if(xmap.clusters_composition[choosen_cluster][i]!=0){
+					// if it's not 0, check if it's the majority in this column
+					var tmp_sum = 0;
+					for(var j = 0; j < xmap.clusters_composition[j][i]; j++){
+						console.log("j=",j);
+						if(j != choosen_cluster){ tmp_sum += xmap.clusters_composition[j][i]; }
+					}
+					if( xmap.clusters_composition[choosen_cluster][i] / (xmap.clusters_composition[choosen_cluster][i] + tmp_sum) > 0.8){
+						console.log(i," is majority!")
+						choosen_haplo_inds.push(xmap.namesets[i]);	
+					}
+				}
+			}
+			console.log("choosen_haplo_inds= ",choosen_haplo_inds);
+
+
+			
+			xmap = {};
+			var namesets = (JSON.parse(JSON.stringify(choosen_haplo_inds)));
+			namesets.push("mtDNAquery");
+
+			xmap = buildMoDMapForHaplogroups(mtDNAquery, choosen_haplo_inds, 100, 9, true, namesets);
+			xmap.print();
+			xmap.loadSequences(false);
+
+		}else{
+			// console.log("Next MoDMap is not ready..");
+		}
+	}
+
 
 	$(document).ready(function(){
+
+		myTimer = setInterval(continueTreeExploration, 1000);
+
+		searchTree = {
+
+		};
 
 		emptyLocalStorage();
 
@@ -579,17 +753,32 @@
 
 		$("#startHaplo").click(function(){
 
-			var ls1 = [ "L1", "L2", "L3", "L4", "L5", "H"];
+			var ls1 = [ "L1", "L2", "L3", "L4", "L5"];
 			var ls2 = [ "L1a", "L1b", "L1c"];
 			var ls3 = [ "N", "X", "Y"];
-			var ls4 = [ "O", "p", "H"];
-			var ls5 = [ "L3", "M", "Q"];
+			var ls4 = [ "O", "P", "H"];
+			var ls5 = [ "L3", "M", "Q"]; //done
+			var ls6 = ["L3", "L4"];
+			var ls7 = ["L3a","L3b","L3c","L3d", "L3e", "L3f", "L3g", "L3h", "L3i", "L3j", "L3k", "L3l", "L3m", "L3n"];
+			var ls8 = ["L3a","L3c","L3e","L3h", "L3i", "L3k"];
+			var ls9 = ["L3a","L3c","L3h", "L3i", "L3k"];
+			var ls10 = ["L3a","L3c","L3i","L3k"];
+			var ls11 = ["L3c","L3i"];
 
+			mtDNAquery = dataset[0][4][0];
+			// mtDNAquery = "NC_012920";
+			
+			haploListToUse = ls7;
+			// clone list to add mtDNAquery to the names
+			var namesets = (JSON.parse(JSON.stringify(haploListToUse)));
+			namesets.push("mtDNAquery");
+			console.log(haploListToUse);
+			console.log(namesets);
 
-			xmap = buildMoDMapForHaplogroups(ls5, 200, 9, true, ls5);
+			xmap = buildMoDMapForHaplogroups(mtDNAquery, haploListToUse, 100, 9, true, namesets);
 			xmap.print();
 			xmap.loadSequences(false);
-
+			
 		});
 
 
@@ -602,6 +791,16 @@
 		// simpelmap.print(); 
 		// simpelmap.loadSequences(false);
 
+		// silhouette inter intra
+		// dbscan + decision tree		
+		// @load.js computeaid function();
+		// mean inter dist
+		// save object?
+		// k closest in distMatr?
+		// 10 closest in Euclidean space
+		// https://dna.jameslick.com/mthap/mthap.cgi
+		// https://phylod3.herokuapp.com/#
+		// https://en.wikipedia.org/wiki/Human_mitochondrial_DNA_haplogroup
 
 	});
 
